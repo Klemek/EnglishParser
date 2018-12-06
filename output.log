@@ -1,0 +1,292 @@
+[2018-12-06 22:12:14][SEVERE][EnglishParser-Utils] Missing configuration string invalid key 
+[2018-12-06 22:12:14][SEVERE][EnglishParser-Utils] Missing configuration string invalid key 
+[2018-12-06 22:12:14][SEVERE][EnglishParser-Utils] Missing configuration string invalid key 
+[2018-12-06 22:12:14][SEVERE][EnglishParser-Utils] Not integer string at key db_user 
+[2018-12-06 22:12:14][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.org/get?testparam=testvalue 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] response : {  "args": {    "testparam": "testvalue"  },   "headers": {    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",     "Connection": "close",     "Content-Encoding": "UTF-8",     "Host": "httpbin.org",     "User-Agent": "Java/1.8.0_161"  },   "origin": "2.1.45.109",   "url": "http://httpbin.org/get?testparam=testvalue"} 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.orga/ 
+[2018-12-06 22:12:15][SEVERE][EnglishParser-HttpUtils] java.net.UnknownHostException: httpbin.orga 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] response :  
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.org/get 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] response : {  "args": {},   "headers": {    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",     "Connection": "close",     "Content-Encoding": "UTF-8",     "Host": "httpbin.org",     "User-Agent": "Java/1.8.0_161"  },   "origin": "2.1.45.109",   "url": "http://httpbin.org/get"} 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.org/get?testparam=testvalue&testparam=testvalue2 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] response : {  "args": {    "testparam": [      "testvalue",       "testvalue2"    ]  },   "headers": {    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",     "Connection": "close",     "Content-Encoding": "UTF-8",     "Host": "httpbin.org",     "User-Agent": "Java/1.8.0_161"  },   "origin": "2.1.45.109",   "url": "http://httpbin.org/get?testparam=testvalue&testparam=testvalue2"} 
+[2018-12-06 22:12:15][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.org/headers 
+[2018-12-06 22:12:16][INFO][EnglishParser-HttpUtils] response : {  "headers": {    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",     "Connection": "close",     "Content-Encoding": "UTF-8",     "Host": "httpbin.org",     "Testheader": "testvalue",     "User-Agent": "Java/1.8.0_161"  }} 
+[2018-12-06 22:12:16][INFO][EnglishParser-HttpUtils] GET request to http://httpbin.org/404 
+[2018-12-06 22:12:16][SEVERE][EnglishParser-HttpUtils] java.io.FileNotFoundException: http://httpbin.org/404 
+[2018-12-06 22:12:16][INFO][EnglishParser-HttpUtils] response : <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN"><title>404 Not Found</title><h1>Not Found</h1><p>The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.</p> 
+[2018-12-06 22:12:16][INFO][EnglishParser-HttpUtils] POST request to http://httpbin.org/post 
+[2018-12-06 22:12:16][INFO][EnglishParser-HttpUtils] response : {  "args": {},   "data": "{\"testdata\":\"testvalue\"}",   "files": {},   "form": {},   "headers": {    "Accept": "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2",     "Connection": "close",     "Content-Encoding": "UTF-8",     "Content-Length": "24",     "Content-Type": "application/json",     "Host": "httpbin.org",     "User-Agent": "Java/1.8.0_161"  },   "json": {    "testdata": "testvalue"  },   "origin": "2.1.45.109",   "url": "http://httpbin.org/post"} 
+[2018-12-06 22:12:16][INFO][EnglishParser-DatabaseManager] Initializing database... 
+[2018-12-06 22:12:16][INFO][EnglishParser-DatabaseManager] 	Driver registered 
+[2018-12-06 22:12:16][INFO][EnglishParser-DatabaseManager] 	Connection successful with DB user : lucius_user 
+[2018-12-06 22:12:16][INFO][EnglishParser-DatabaseManager] 	Connection successful with DB super user : lucius_admin 
+[2018-12-06 22:12:16][INFO][EnglishParser-DatabaseManager] 	Creating SessionFactory... 
+[2018-12-06 22:12:21][INFO][EnglishParser-DatabaseManager] 	SessionFactory created in 4 s 103 ms 
+[2018-12-06 22:12:21][INFO][EnglishParser-DatabaseManager] 	Database v1 last updated : 8/29/18 7:34 PM 
+[2018-12-06 22:12:21][INFO][EnglishParser-DatabaseManager] 	Database up to date in 55 ms 
+[2018-12-06 22:12:21][INFO][EnglishParser-DatabaseManager] Database ready in 4 s 859 ms 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] Database not initialized, cannot do query 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] java.lang.IllegalArgumentException: org.hibernate.hql.internal.ast.QuerySyntaxException: Nound is not mapped [FROM Nound WHERE base = ?0] 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:138) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:181) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:188) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.internal.AbstractSharedSessionContract.createQuery(AbstractSharedSessionContract.java:713) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.internal.AbstractSessionImpl.createQuery(AbstractSessionImpl.java:23) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 java.lang.reflect.Method.invoke(Method.java:498) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.hibernate.context.internal.ThreadLocalSessionContext$TransactionProtectionWrapper.invoke(ThreadLocalSessionContext.java:350) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 com.sun.proxy.$Proxy41.createQuery(Unknown Source) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.getRowsFromSessionQueryBase(DatabaseManager.java:335) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.getRowsFromSessionQuery(DatabaseManager.java:284) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManagerTest.testGetRowsFromSessionQueryError(DatabaseManagerTest.java:178) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 java.lang.reflect.Method.invoke(Method.java:498) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.run(ParentRunner.java:363) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:128) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:27) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.run(ParentRunner.java:363) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runner.JUnitCore.run(JUnitCore.java:137) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242) 
+[2018-12-06 22:12:21][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70) 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:21][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:22][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:22][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:22][WARNING][EnglishParser-DatabaseManager] java.lang.IllegalArgumentException: org.hibernate.hql.internal.ast.QuerySyntaxException: Nound is not mapped [FROM Nound WHERE base = ?0] 
+[2018-12-06 22:12:22][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:22][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:22][SEVERE][EnglishParser-DatabaseManager] Database not initialized, cannot do query 
+[2018-12-06 22:12:22][INFO][EnglishParser-TestUtils] Database wiped 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 	No information on database, assuming empty 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 	Cleaning database... 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 	Updating to v1... 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table db_info 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table dict_adj 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table dict_def 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table dict_noun 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table dict_verb 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 		(+) table dict_word 
+[2018-12-06 22:12:22][INFO][EnglishParser-DatabaseManager] 	Database up to date in 145 ms 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] Initializing database... 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Driver registered 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Connection successful with DB user : lucius_user 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] Cannot connect with DB super user : java.sql.SQLException: Test exception do not panic 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.easymock.internal.MockInvocationHandler.invoke(MockInvocationHandler.java:46) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl.invoke(EasyMockMethodInvocationControl.java:90) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:182) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:164) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.methodCall(MockGateway.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.openConnection(DatabaseManager.java:162) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.openConnection(DatabaseManager.java:145) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.init(DatabaseManager.java:69) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManagerErrorsTest.testInitInvalidSuperUser(DatabaseManagerErrorsTest.java:63) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 java.lang.reflect.Method.invoke(Method.java:498) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.TestMethod.invoke(TestMethod.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:326) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:89) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:97) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.executeTest(PowerMockJUnit44RunnerDelegateImpl.java:310) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTestInSuper(PowerMockJUnit47RunnerDelegateImpl.java:131) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.access$100(PowerMockJUnit47RunnerDelegateImpl.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner$TestExecutorStatement.evaluate(PowerMockJUnit47RunnerDelegateImpl.java:147) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.evaluateStatement(PowerMockJUnit47RunnerDelegateImpl.java:107) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTest(PowerMockJUnit47RunnerDelegateImpl.java:82) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runBeforesThenTestThenAfters(PowerMockJUnit44RunnerDelegateImpl.java:298) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:87) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:50) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.invokeTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:218) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.runMethods(PowerMockJUnit44RunnerDelegateImpl.java:160) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$1.run(PowerMockJUnit44RunnerDelegateImpl.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:34) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:44) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.run(PowerMockJUnit44RunnerDelegateImpl.java:136) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.JUnit4TestSuiteChunkerImpl.run(JUnit4TestSuiteChunkerImpl.java:121) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner.run(AbstractCommonPowerMockRunner.java:57) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.PowerMockRunner.run(PowerMockRunner.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:128) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:27) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.run(ParentRunner.java:363) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runner.JUnitCore.run(JUnitCore.java:137) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70) 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] Initializing database... 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Driver registered 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] Cannot connect with DB user : java.sql.SQLException: Test exception do not panic 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.easymock.internal.MockInvocationHandler.invoke(MockInvocationHandler.java:46) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl.invoke(EasyMockMethodInvocationControl.java:90) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:182) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:164) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.methodCall(MockGateway.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.openConnection(DatabaseManager.java:162) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.openConnection(DatabaseManager.java:145) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.openConnection(DatabaseManager.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.init(DatabaseManager.java:63) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManagerErrorsTest.testInitInvalidUser(DatabaseManagerErrorsTest.java:47) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 java.lang.reflect.Method.invoke(Method.java:498) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.TestMethod.invoke(TestMethod.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:326) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:89) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:97) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.executeTest(PowerMockJUnit44RunnerDelegateImpl.java:310) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTestInSuper(PowerMockJUnit47RunnerDelegateImpl.java:131) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.access$100(PowerMockJUnit47RunnerDelegateImpl.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner$TestExecutorStatement.evaluate(PowerMockJUnit47RunnerDelegateImpl.java:147) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.evaluateStatement(PowerMockJUnit47RunnerDelegateImpl.java:107) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTest(PowerMockJUnit47RunnerDelegateImpl.java:82) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runBeforesThenTestThenAfters(PowerMockJUnit44RunnerDelegateImpl.java:298) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:87) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:50) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.invokeTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:218) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.runMethods(PowerMockJUnit44RunnerDelegateImpl.java:160) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$1.run(PowerMockJUnit44RunnerDelegateImpl.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:34) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:44) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.run(PowerMockJUnit44RunnerDelegateImpl.java:136) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.JUnit4TestSuiteChunkerImpl.run(JUnit4TestSuiteChunkerImpl.java:121) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner.run(AbstractCommonPowerMockRunner.java:57) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.PowerMockRunner.run(PowerMockRunner.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:128) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:27) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.run(ParentRunner.java:363) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runner.JUnitCore.run(JUnitCore.java:137) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70) 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Driver registered 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Driver not registered 
+[2018-12-06 22:12:23][INFO][EnglishParser-DatabaseManager] 	Driver not registered 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] Exception while checking driver : java.sql.SQLException: Test exception do not panic 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.easymock.internal.MockInvocationHandler.invoke(MockInvocationHandler.java:46) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.api.easymock.internal.invocationcontrol.EasyMockMethodInvocationControl.invoke(EasyMockMethodInvocationControl.java:90) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:182) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.doMethodCall(MockGateway.java:164) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.core.MockGateway.methodCall(MockGateway.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManager.checkDriver(DatabaseManager.java:112) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 fr.klemek.englishparser.utils.DatabaseManagerErrorsTest.testRegisterDriverError(DatabaseManagerErrorsTest.java:106) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 java.lang.reflect.Method.invoke(Method.java:498) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.TestMethod.invoke(TestMethod.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:326) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie$2.run(MethodRoadie.java:89) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runBeforesThenTestThenAfters(MethodRoadie.java:97) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.executeTest(PowerMockJUnit44RunnerDelegateImpl.java:310) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTestInSuper(PowerMockJUnit47RunnerDelegateImpl.java:131) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.access$100(PowerMockJUnit47RunnerDelegateImpl.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner$TestExecutorStatement.evaluate(PowerMockJUnit47RunnerDelegateImpl.java:147) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.evaluateStatement(PowerMockJUnit47RunnerDelegateImpl.java:107) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit47RunnerDelegateImpl$PowerMockJUnit47MethodRunner.executeTest(PowerMockJUnit47RunnerDelegateImpl.java:82) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$PowerMockJUnit44MethodRunner.runBeforesThenTestThenAfters(PowerMockJUnit44RunnerDelegateImpl.java:298) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.runTest(MethodRoadie.java:87) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.MethodRoadie.run(MethodRoadie.java:50) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.invokeTestMethod(PowerMockJUnit44RunnerDelegateImpl.java:218) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.runMethods(PowerMockJUnit44RunnerDelegateImpl.java:160) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl$1.run(PowerMockJUnit44RunnerDelegateImpl.java:134) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runUnprotected(ClassRoadie.java:34) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.internal.runners.ClassRoadie.runProtected(ClassRoadie.java:44) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.internal.impl.PowerMockJUnit44RunnerDelegateImpl.run(PowerMockJUnit44RunnerDelegateImpl.java:136) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.JUnit4TestSuiteChunkerImpl.run(JUnit4TestSuiteChunkerImpl.java:121) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.common.internal.impl.AbstractCommonPowerMockRunner.run(AbstractCommonPowerMockRunner.java:57) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.powermock.modules.junit4.PowerMockRunner.run(PowerMockRunner.java:59) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:128) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.Suite.runChild(Suite.java:27) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$3.run(ParentRunner.java:290) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.access$000(ParentRunner.java:58) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runners.ParentRunner.run(ParentRunner.java:363) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 org.junit.runner.JUnitCore.run(JUnitCore.java:137) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242) 
+[2018-12-06 22:12:23][SEVERE][EnglishParser-DatabaseManager] 	 com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70) 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:23][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-TestUtils] Dictionary emptied 
+[2018-12-06 22:12:24][INFO][EnglishParser-DictionaryManager] Dictionary not initialized 
+[2018-12-06 22:12:24][INFO][EnglishParser-DictionaryManager] Initializing dictionary... 
+[2018-12-06 22:12:24][INFO][EnglishParser-DictionaryManager] 	Emptied dictionary in 4 ms 
+[2018-12-06 22:12:25][INFO][EnglishParser-DictionaryManager] 	Loaded 130 irregular nouns in 1 s 112 ms 
+[2018-12-06 22:12:25][INFO][EnglishParser-DictionaryManager] 	Loaded 19 irregular third persons in 1 ms 
+[2018-12-06 22:12:30][INFO][EnglishParser-DictionaryManager] 	Loaded 568 irregular verbs in 4 s 824 ms 
+[2018-12-06 22:12:30][INFO][EnglishParser-DictionaryManager] 	Loaded 10 irregular adverbs in 269 ms 
+[2018-12-06 22:12:32][INFO][EnglishParser-DictionaryManager] 	Loaded 75 gender nouns in 2 s 205 ms 
+[2018-12-06 22:12:32][INFO][EnglishParser-DictionaryManager] 	Imported wordnet structure in 123 ms 
+[2018-12-06 22:12:32][INFO][EnglishParser-DictionaryManager] 	Importing wordnet data... (this might take a while ~4 min)  
+[2018-12-06 22:12:32][INFO][EnglishParser-DictionaryManager] 	Imported wordnet data in 12 ms 
+[2018-12-06 22:12:32][INFO][EnglishParser-DictionaryManager] 	Computing words... (this will take a while ~40 min)  
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+14 synonyms set 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+17 words 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+4 definitions 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+5 nouns 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+1 verbs 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 		+4 adjectives 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 	Computed words in 836 ms 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] 	Dropped wordnet structure in 38 ms 
+[2018-12-06 22:12:33][INFO][EnglishParser-DictionaryManager] Dictionary initialized in 9 s 459 ms 

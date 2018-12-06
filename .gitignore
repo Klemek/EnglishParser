@@ -1,0 +1,7 @@
+/.idea/
+/target/
+/res/
+configuration.properties
+*.iml
+*.jar
+db_workbench.txt
