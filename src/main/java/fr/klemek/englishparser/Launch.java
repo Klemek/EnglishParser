@@ -1,9 +1,9 @@
 package fr.klemek.englishparser;
 
-import fr.klemek.logger.Logger;
 import fr.klemek.englishparser.utils.DatabaseManager;
 import fr.klemek.englishparser.utils.DictionaryManager;
 import fr.klemek.englishparser.utils.Utils;
+import fr.klemek.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class Launch {
 
     private static void testRead(){
         StringBuilder data = new StringBuilder();
-        try(BufferedReader reader = Utils.readFile("a_very_short_story.txt")){
+        try (BufferedReader reader = Utils.readFile("test_res/a_very_short_story.txt")) {
             reader.readLine(); //skip first line
             String line;
             while((line = reader.readLine()) != null){
