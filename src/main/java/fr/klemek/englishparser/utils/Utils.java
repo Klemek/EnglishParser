@@ -78,9 +78,12 @@ public final class Utils {
     }
 
     public static String getTimeSpent(long t0) {
-        long ms = System.currentTimeMillis() - t0;
-        long sec = ms / 1000;
-        ms %= 1000;
+        return getTimeSpan(System.currentTimeMillis() - t0);
+    }
+
+    public static String getTimeSpan(long dt) {
+        long sec = dt / 1000;
+        dt %= 1000;
         long min = sec / 60;
         sec %= 60;
         long hour = min / 60;
@@ -93,8 +96,8 @@ public final class Utils {
             times.add(min + " m");
         if (sec > 0 && times.size() < 2)
             times.add(sec + " s");
-        if (ms > 0 && times.size() < 2)
-            times.add(ms + " ms");
+        if (dt > 0 && times.size() < 2)
+            times.add(dt + " ms");
 
         if (times.isEmpty())
             return "no time";
