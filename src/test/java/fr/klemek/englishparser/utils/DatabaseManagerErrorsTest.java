@@ -1,7 +1,13 @@
 package fr.klemek.englishparser.utils;
 
-import fr.klemek.logger.Logger;
 import fr.klemek.englishparser.TestUtils;
+import fr.klemek.logger.Logger;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -10,16 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertFalse;
 import static org.powermock.api.easymock.PowerMock.mockStatic;
 import static org.powermock.api.easymock.PowerMock.replay;
@@ -39,7 +36,7 @@ public class DatabaseManagerErrorsTest {
         expect(DriverManager.getDrivers())
                 .andReturn(Collections.enumeration(Collections.singletonList(new com.mysql.cj.jdbc.Driver())));
 
-        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Utils.getString("db_user"), Utils.getString("db_password")))
+        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Config.getString("db_user"), Config.getString("db_password")))
                 .andThrow(new SQLException("Test exception do not panic"));
 
         replay(DriverManager.class);
@@ -52,10 +49,10 @@ public class DatabaseManagerErrorsTest {
         expect(DriverManager.getDrivers())
                 .andReturn(Collections.enumeration(Arrays.asList(new Driver[]{new com.mysql.cj.jdbc.Driver()})));
 
-        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Utils.getString("db_user"), Utils.getString("db_password")))
+        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Config.getString("db_user"), Config.getString("db_password")))
                 .andReturn(null);
 
-        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Utils.getString("db_super_user"), Utils.getString("db_super_password")))
+        expect(DriverManager.getConnection(TestUtils.DB_CONNECTION_STRING, Config.getString("db_super_user"), Config.getString("db_super_password")))
                 .andThrow(new SQLException("Test exception do not panic"));
 
         replay(DriverManager.class);

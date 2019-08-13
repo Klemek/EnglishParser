@@ -1,35 +1,18 @@
 package fr.klemek.englishparser.utils;
 
 import fr.klemek.logger.Logger;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.logging.Level;
+
 /**
  * A class containing utils for http requests.
- *
- * @author Clement Gouin
  */
 public final class HttpUtils {
 
@@ -47,7 +30,7 @@ public final class HttpUtils {
      * @param sUrl    the url to reach
      * @return the results of the request
      */
-    public static HttpResult executeRequest(String sMethod, String sUrl) {
+    static HttpResult executeRequest(String sMethod, String sUrl) {
         return executeRequest(sMethod, sUrl, null, null, null);
     }
 
@@ -59,7 +42,7 @@ public final class HttpUtils {
      * @param params  the url parameters (or null if not needed)
      * @return the results of the request
      */
-    public static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params) {
+    static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params) {
         return executeRequest(sMethod, sUrl, params, null, null);
     }
 
@@ -71,7 +54,7 @@ public final class HttpUtils {
      * @param data    the json data of the request
      * @return the results of the request
      */
-    public static HttpResult executeRequest(String sMethod, String sUrl, JSONObject data) {
+    static HttpResult executeRequest(String sMethod, String sUrl, JSONObject data) {
         return executeRequest(sMethod, sUrl, null, null, data);
     }
 
@@ -84,8 +67,8 @@ public final class HttpUtils {
      * @param headers additional headers for the request (or null if not needed)
      * @return the results of the request
      */
-    public static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params,
-                                            Map<String, String> headers) {
+    static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params,
+                                     Map<String, String> headers) {
         return executeRequest(sMethod, sUrl, params, headers, null);
     }
 
@@ -113,8 +96,8 @@ public final class HttpUtils {
      * @param data    the json data of the request
      * @return the results of the request
      */
-    public static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params,
-                                            Map<String, String> headers, JSONObject data) {
+    private static HttpResult executeRequest(String sMethod, String sUrl, Map<String, String[]> params,
+                                             Map<String, String> headers, JSONObject data) {
         StringBuilder result = new StringBuilder();
         int responseCode = 0;
         Map<String, List<String>> responseHeaders = new HashMap<>(0);
@@ -133,8 +116,8 @@ public final class HttpUtils {
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("X-HTTP-Method-Override", sMethod);
             }
-            conn.setReadTimeout(Utils.getInt("http_request_timeout"));
-            conn.setConnectTimeout(Utils.getInt("http_request_timeout"));
+            conn.setReadTimeout(Config.getInt("http_request_timeout"));
+            conn.setConnectTimeout(Config.getInt("http_request_timeout"));
             conn.setDoInput(true);
             conn.setRequestProperty("Content-Encoding", ENCODING);
 
@@ -253,7 +236,7 @@ public final class HttpUtils {
      * @param params the params to pass to the request
      * @return the url format of the parameters
      */
-    public static String getParametersString(Map<String, String[]> params) {
+    private static String getParametersString(Map<String, String[]> params) {
         if (params == null)
             return "";
         StringBuilder result = new StringBuilder();
@@ -299,7 +282,7 @@ public final class HttpUtils {
      * @param password the password
      * @return a hashmap containing the basic authentication header
      */
-    public static Map<String, String> getBasicAuthHeaders(String username, String password) {
+    static Map<String, String> getBasicAuthHeaders(String username, String password) {
         HashMap<String, String> headers = new HashMap<>();
         String value = HttpUtils.encodeBase64String(username + ":" + password);
         headers.put("Authorization", String.format("Basic %s", value));
@@ -311,13 +294,13 @@ public final class HttpUtils {
      */
     public static class HttpResult {
 
-        public final int code;
-        public final String result;
-        public final Map<String, List<String>> headers;
+        final int code;
+        final String result;
+        final Map<String, List<String>> headers;
         private final long timeMillis;
         private JSONObject json = null;
 
-        public HttpResult(int code, String result, Map<String, List<String>> headers) {
+        HttpResult(int code, String result, Map<String, List<String>> headers) {
             super();
             this.code = code;
             this.result = result;
@@ -328,7 +311,7 @@ public final class HttpUtils {
         /**
          * @return the result of the request parsed as JSON
          */
-        public JSONObject getJSON() {
+        JSONObject getJSON() {
             if (json == null)
                 try {
                     json = new JSONObject(result);

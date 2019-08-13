@@ -1,9 +1,10 @@
 package fr.klemek.englishparser;
 
 import fr.klemek.englishparser.model.dict.Word;
+import fr.klemek.englishparser.utils.Config;
 import fr.klemek.englishparser.utils.DatabaseManager;
 import fr.klemek.englishparser.utils.DictionaryManager;
-import fr.klemek.englishparser.utils.Utils;
+import fr.klemek.englishparser.utils.FileUtils;
 import fr.klemek.logger.Logger;
 
 import java.io.BufferedReader;
@@ -13,12 +14,12 @@ import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 
-public class Launch {
+class Launch {
 
     public static void main(String... args) {
         Logger.init("logging.properties");
         Logger.log("Initializing...");
-        if (!DatabaseManager.init(Utils.getConnectionString("db_connection_string")))
+        if (!DatabaseManager.init(Config.getConnectionString("db_connection_string")))
             throw new IllegalStateException("Database cannot be initialized");
         if (!DictionaryManager.init())
             throw new IllegalStateException("Dictionary cannot be initialized");
@@ -29,7 +30,7 @@ public class Launch {
 
     private static void testRead() {
         StringBuilder data = new StringBuilder();
-        try (BufferedReader reader = Utils.readFile("test_res/a_very_short_story.txt")) {
+        try (BufferedReader reader = FileUtils.readFile("test_res/a_very_short_story.txt")) {
             reader.readLine(); //skip first line
             String line;
             while ((line = reader.readLine()) != null) {

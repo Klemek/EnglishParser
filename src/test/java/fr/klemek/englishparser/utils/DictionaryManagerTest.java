@@ -7,20 +7,15 @@ import fr.klemek.englishparser.model.dict.Adjective;
 import fr.klemek.englishparser.model.dict.Noun;
 import fr.klemek.englishparser.model.dict.Verb;
 import fr.klemek.englishparser.model.dict.Word;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DictionaryManagerTest {
 
@@ -30,7 +25,7 @@ public class DictionaryManagerTest {
         DictionaryManager.setInitialized(false);
 
         assertFalse(DictionaryManager.isInitialized());
-        assertTrue(DictionaryManager.init());
+        assertTrue(DictionaryManager.init(true));
         assertTrue(DictionaryManager.isInitialized());
 
         try (Connection conn = DatabaseManager.openConnection()) {

@@ -1,22 +1,19 @@
 package fr.klemek.englishparser.utils;
 
-import fr.klemek.logger.Logger;
 import fr.klemek.englishparser.TestUtils;
 import fr.klemek.englishparser.utils.HttpUtils.HttpResult;
+import fr.klemek.logger.Logger;
+import org.json.JSONObject;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONObject;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class HttpUtilsTest {
 
@@ -38,7 +35,7 @@ public class HttpUtilsTest {
         assertEquals(200, hr.code);
         assertNotNull(hr.result);
         JSONObject obj = hr.getJSON();
-        assertEquals("http://httpbin.org/get", obj.getString("url"));
+        assertEquals("https://httpbin.org/get", obj.getString("url"));
     }
 
     @Test

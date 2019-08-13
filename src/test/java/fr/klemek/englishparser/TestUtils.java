@@ -1,8 +1,8 @@
 package fr.klemek.englishparser;
 
-import fr.klemek.logger.Logger;
+import fr.klemek.englishparser.utils.Config;
 import fr.klemek.englishparser.utils.DatabaseManager;
-import fr.klemek.englishparser.utils.Utils;
+import fr.klemek.logger.Logger;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 public final class TestUtils {
 
-    public static final String DB_CONNECTION_STRING = Utils.getConnectionString("db_connection_string");
+    public static final String DB_CONNECTION_STRING = Config.getConnectionString("db_connection_string");
 
     public static final Level LOG_LEVEL = Level.INFO;
 
@@ -57,7 +57,7 @@ public final class TestUtils {
         TestUtils.initTest(false);
     }
 
-    public static void initTest(boolean emptyDatabase) throws Exception {
+    private static void initTest(boolean emptyDatabase) throws Exception {
         TestUtils.initTest(emptyDatabase, false);
     }
 
