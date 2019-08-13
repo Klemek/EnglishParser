@@ -6,30 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class UtilsTest {
-
-    @Test
-    public void testCoalesce() {
-        assertNull(Utils.coalesce());
-        assertNull(Utils.coalesce((String) null));
-        assertNull(Utils.coalesce((String) null, null));
-        assertEquals("a", Utils.coalesce(null, "a"));
-        assertEquals("a", Utils.coalesce(null, "a", "b"));
-    }
-
-    @Test
-    public void testGetDefaultPackage() {
-        assertEquals("fr.klemek.englishparser", Utils.getDefaultPackage());
-    }
-
-    @Test
-    public void testGetCallingClassName() {
-        assertEquals("Thread", Utils.getCallingClassName(0));
-        assertEquals("Utils", Utils.getCallingClassName(1));
-        assertEquals("UtilsTest", Utils.getCallingClassName(2));
-    }
 
     @Test
     public void testGetTable() {

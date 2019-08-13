@@ -28,41 +28,6 @@ public final class StringUtils {
         }
     }
 
-    /**
-     * Convert a string into a Long.
-     *
-     * @param text a text to convert to Long
-     * @return Long or null if the string couldn't be converted
-     */
-    static Long stringToLong(String text) {
-        try {
-            return Long.parseLong(text);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    /**
-     * Check if a String is alphanumeric including some chars
-     *
-     * @param source   the String to test
-     * @param included included chars other than alphanumerics
-     * @return true if it passes
-     */
-    static boolean isAlphaNumeric(String source, Character... included) {
-        if (source == null)
-            return true;
-        List<Character> includedList = Arrays.asList(included);
-        for (char c : source.toCharArray())
-            if (!Character.isAlphabetic(c) && !Character.isDigit(c) && !includedList.contains(c))
-                return false;
-        return true;
-    }
-
-    static boolean containsIgnoreCase(String s1, String s2) {
-        return s1.toLowerCase().contains(s2.toLowerCase());
-    }
-
     static boolean isVowel(char c) {
         return vowels.contains(c);
     }

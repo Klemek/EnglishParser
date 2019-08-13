@@ -3,19 +3,21 @@ package fr.klemek.englishparser.model.dict;
 import fr.klemek.englishparser.model.DatabaseObject;
 import fr.klemek.englishparser.utils.DatabaseManager;
 
-import java.util.List;
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "dict_verb")
 public class Verb extends WordObject {
 
+    @Id
     @Column(name = "past_tense")
     private String pastTense;
+    @Id
     @Column(name = "past_part")
     private String pastParticiple;
     @Column(name = "pres_part")

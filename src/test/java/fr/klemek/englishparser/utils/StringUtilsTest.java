@@ -21,45 +21,10 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testStringToLongSuccess() {
-        String test = "123456";
-        assertEquals(Long.valueOf(123456), StringUtils.stringToLong(test));
-    }
-
-    @Test
     public void testStringToIntegerFail() {
         String test = "test";
         assertNull(StringUtils.stringToInteger(test));
         assertNull(StringUtils.stringToInteger(null));
-    }
-
-    @Test
-    public void testStringToLongFail() {
-        String test = "test";
-        assertNull(StringUtils.stringToLong(test));
-        assertNull(StringUtils.stringToLong(null));
-    }
-
-    @Test
-    public void testContainsIgnoreCase() {
-        assertTrue(StringUtils.containsIgnoreCase("abcdef", "def"));
-        assertTrue(StringUtils.containsIgnoreCase("abcDef", "def"));
-        assertTrue(StringUtils.containsIgnoreCase("abcdef", "dEf"));
-        assertTrue(StringUtils.containsIgnoreCase("abcdeF", "Def"));
-        assertFalse(StringUtils.containsIgnoreCase("abcdef", "aef"));
-    }
-
-    @Test
-    public void testIsAlphaNumeric() {
-        assertTrue(StringUtils.isAlphaNumeric("aBc"));
-        assertTrue(StringUtils.isAlphaNumeric("123"));
-        assertTrue(StringUtils.isAlphaNumeric("1B2a3Z45bc"));
-        assertFalse(StringUtils.isAlphaNumeric(" -;!:,%"));
-        assertFalse(StringUtils.isAlphaNumeric("1B2a3Z4 5bc"));
-        assertTrue(StringUtils.isAlphaNumeric(""));
-        assertTrue(StringUtils.isAlphaNumeric(null));
-        assertTrue(StringUtils.isAlphaNumeric("1B2a3Z4 5bc", ' '));
-        assertTrue(StringUtils.isAlphaNumeric(" -;!:,%", ' ', '-', ';', '!', ':', ',', '%'));
     }
 
     @Test
