@@ -261,11 +261,17 @@ public final class DictionaryManager {
 
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_synset")) {
+
+                int rowcount = DatabaseManager.getRowCount(rs);
+                int row = 0;
+                int rowstep = rowcount / 10;
+
                 Word w;
                 String word;
                 String type;
                 int synsetId;
                 int wNum;
+
                 while (rs.next()) {
                     word = rs.getString("word");
                     type = rs.getString("ss_type");
@@ -300,18 +306,32 @@ public final class DictionaryManager {
                     }
                     if (w != null)
                         w.save();
+                    row++;
+                    if (row % rowstep == 0) {
+                        Logger.log("\tComputed {0} words ({1}%)", row, 100 * row / rowcount);
+                    }
                 }
             }
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_gloss")) {
                 String gloss;
                 int synsetId;
                 Definition d;
+
+                int rowcount = DatabaseManager.getRowCount(rs);
+                int row = 0;
+                int rowstep = rowcount / 10;
+
                 while (rs.next()) {
                     gloss = rs.getString("gloss");
                     synsetId = rs.getInt("synset_id");
                     if (synSetMapping.containsKey(synsetId)) {
                         d = new Definition(getSynSetId(synsetId), gloss);
                         d.save();
+                    }
+
+                    row++;
+                    if (row % rowstep == 0) {
+                        Logger.log("\tComputed {0} definitions ({1}%)", row, 100 * row / rowcount);
                     }
                 }
             }
