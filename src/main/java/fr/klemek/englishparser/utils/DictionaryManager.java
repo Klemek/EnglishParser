@@ -2,6 +2,7 @@ package fr.klemek.englishparser.utils;
 
 import fr.klemek.englishparser.model.dict.*;
 import fr.klemek.logger.Logger;
+import org.hibernate.Transaction;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public final class DictionaryManager {
                 Logger.log("\tEmptied dictionary in {0}", Utils.getTimeSpent(t1));
 
                 if (!skipPreComputed && FileUtils.resourceFileExists("dict/sql/ep_fill.sql")) {
-                    Logger.log("\tImporting pre-computed data... (this might take a while ~4 min) ");
+                    Logger.log("\tImporting pre-computed data...");
                     t1 = System.currentTimeMillis();
                     DatabaseManager.importSQL(conn, "dict/sql/ep_fill");
 
@@ -68,6 +69,17 @@ public final class DictionaryManager {
                     Logger.log("\t\t+{0} adjectives", Adjective.getAll().size());
 
                 } else {
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_init");
+                    Logger.log("\tImported wordnet structure in {0}", Utils.getTimeSpent(t1));
+
+                    Logger.log("\tImporting wordnet data...");
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_fill");
+                    Logger.log("\tImported wordnet data in {0}", Utils.getTimeSpent(t1));
+
+                    Transaction tx = DatabaseManager.getSessionFactory().getCurrentSession().beginTransaction();
+
                     t1 = System.currentTimeMillis();
                     loadIrregularPlurals();
                     Logger.log("\tLoaded {1} irregular nouns in {0}", Utils.getTimeSpent(t1), irregularPlurals.size());
@@ -88,21 +100,14 @@ public final class DictionaryManager {
                     loadGenderNouns();
                     Logger.log("\tLoaded {1} gender nouns in {0}", Utils.getTimeSpent(t1), genderNouns.size());
 
-                    t1 = System.currentTimeMillis();
-                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_init");
-                    Logger.log("\tImported wordnet structure in {0}", Utils.getTimeSpent(t1));
-
-                    Logger.log("\tImporting wordnet data... (this might take a while ~4 min) ");
-                    t1 = System.currentTimeMillis();
-                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_fill");
-                    Logger.log("\tImported wordnet data in {0}", Utils.getTimeSpent(t1));
-
-                    Logger.log("\tComputing words... (this will take a while ~40 min) ");
+                    Logger.log("\tComputing words... (this will take a while) ");
                     t1 = System.currentTimeMillis();
                     computeWords(conn);
                     Logger.log("\tComputed words in {0}", Utils.getTimeSpent(t1));
 
                     synSetMapping.clear();
+
+                    tx.commit();
 
                     t1 = System.currentTimeMillis();
                     DatabaseManager.importSQL(conn, "dict/sql/wordnet_drop");
@@ -311,6 +316,7 @@ public final class DictionaryManager {
                 }
             }
         }
+
         Logger.log("\t\t+{0} synonyms' set", autoInc);
         Logger.log("\t\t+{0} words", Word.getAll().size());
         Logger.log("\t\t+{0} definitions", Definition.getAll().size());

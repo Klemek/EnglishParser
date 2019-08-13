@@ -1,17 +1,15 @@
 package fr.klemek.englishparser.model;
 
-import fr.klemek.logger.Logger;
 import fr.klemek.englishparser.utils.DatabaseManager;
-
-import java.io.Serializable;
-import java.util.List;
-import java.util.logging.Level;
-
-import javax.persistence.MappedSuperclass;
-
+import fr.klemek.logger.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
+import java.util.List;
+import java.util.logging.Level;
 
 @MappedSuperclass
 public abstract class DatabaseObject implements Serializable {
@@ -24,8 +22,12 @@ public abstract class DatabaseObject implements Serializable {
             Logger.log(Level.SEVERE, "Database not initialized, cannot save object");
             return false;
         }
-        Transaction tx = null;
         Session session = DatabaseManager.getSessionFactory().getCurrentSession();
+        if (session.getTransaction().isActive()) {
+            session.save(this);
+            return true;
+        }
+        Transaction tx = null;
         try {
             tx = session.beginTransaction();
             session.save(this);
@@ -44,8 +46,12 @@ public abstract class DatabaseObject implements Serializable {
             Logger.log(Level.SEVERE, "Database not initialized, cannot update object");
             return false;
         }
-        Transaction tx = null;
         Session session = DatabaseManager.getSessionFactory().getCurrentSession();
+        if (session.getTransaction().isActive()) {
+            session.update(this);
+            return true;
+        }
+        Transaction tx = null;
         try {
             tx = session.beginTransaction();
             session.update(this);
@@ -64,8 +70,12 @@ public abstract class DatabaseObject implements Serializable {
             Logger.log(Level.SEVERE, "Database not initialized, cannot delete object");
             return false;
         }
-        Transaction tx = null;
         Session session = DatabaseManager.getSessionFactory().getCurrentSession();
+        if (session.getTransaction().isActive()) {
+            session.delete(this);
+            return true;
+        }
+        Transaction tx = null;
         try {
             tx = session.beginTransaction();
             session.delete(this);

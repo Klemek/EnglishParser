@@ -20,32 +20,6 @@ public final class Utils {
     private Utils() {
     }
 
-    /*
-     * Transform a JSONArray into a List of jsonObject.
-     *
-     * @param src the source JSONArray
-     * @return a list of jsonObject
-     */
-    /*public static List<JSONObject> jArrayToJObjectList(JSONArray src) {
-        ArrayList<JSONObject> lst = new ArrayList<>(src.length());
-        for (int i = 0; i < src.length(); i++)
-            lst.add(src.getJSONObject(i));
-        return lst;
-    }*/
-
-    /**
-     * Return the class name from the calling class in th stack trace.
-     *
-     * @param stackLevel the level in the stack trace
-     * @return the classname of th calling class
-     */
-    static String getCallingClassName(int stackLevel) {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        if (stackLevel >= stackTrace.length)
-            return null;
-        String[] source = stackTrace[stackLevel].getClassName().split("\\.");
-        return source[source.length - 1];
-    }
 
     /**
      * Compare 2 lists
@@ -62,30 +36,6 @@ public final class Utils {
                 out.add(obj);
         return out;
     }
-
-
-    @SuppressWarnings("unchecked")
-    static <T> T coalesce(T... items) {
-        for (T i : items) if (i != null) return i;
-        return null;
-    }
-
-    /*
-     * Navigate through a JSONObject by keys
-     *
-     * @param source the original JSONObject
-     * @param keys   the keys to find successively
-     * @return the found JSONObject or null if the key was not found
-     */
-    /*public static JSONObject navigateJSON(JSONObject source, String... keys) {
-        JSONObject obj = source;
-        for (String key : keys) {
-            if (!obj.has(key))
-                return null;
-            obj = obj.getJSONObject(key);
-        }
-        return obj;
-    }*/
 
     /**
      * @return the current ip on the first local network

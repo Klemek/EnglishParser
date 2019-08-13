@@ -13,19 +13,6 @@ public final class FileUtils {
     /**
      * Return the extension of a file.
      *
-     * @param file the file
-     * @return the extension of the file
-     */
-    static String getExtension(File file) {
-        if (file == null) {
-            return null;
-        }
-        return getExtension(file.getName());
-    }
-
-    /**
-     * Return the extension of a file.
-     *
      * @param fileName the file
      * @return the extension of the file
      */

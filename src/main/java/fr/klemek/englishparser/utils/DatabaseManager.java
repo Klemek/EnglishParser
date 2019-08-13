@@ -140,7 +140,7 @@ public final class DatabaseManager {
         String userName = Config.getString(superuser ? "db_super_user" : DB_USER);
         String password = Config.getString(superuser ? "db_super_password" : "db_password");
         String url = connectionString == null ? defaultConnectionString : connectionString;
-            return DriverManager.getConnection(url, userName, password);
+        return DriverManager.getConnection(url, userName, password);
     }
 
     /**
@@ -232,14 +232,17 @@ public final class DatabaseManager {
             return null;
         }
         Session session = getSessionFactory().getCurrentSession();
+
         Transaction tx = null;
         try {
-            tx = session.beginTransaction();
+            if (!session.getTransaction().isActive())
+                tx = session.beginTransaction();
             Query query = session.createQuery(hibernateQuery);
             loadQueryParameters(query, parametersMap, parameters);
             @SuppressWarnings("unchecked")
             T result = (T) query.setMaxResults(1).getSingleResult();
-            tx.commit();
+            if (tx != null)
+                tx.commit();
             return result;
         } catch (NoResultException e) {
             if (tx != null)
@@ -312,7 +315,8 @@ public final class DatabaseManager {
         Transaction tx = null;
         Session session = getSessionFactory().getCurrentSession();
         try {
-            tx = session.beginTransaction();
+            if (!session.getTransaction().isActive())
+                tx = session.beginTransaction();
             Query query = session.createQuery(hibernateQuery);
             if (start > 0)
                 query.setFirstResult(start);
@@ -321,7 +325,8 @@ public final class DatabaseManager {
             loadQueryParameters(query, parametersMap, parameters);
             @SuppressWarnings("unchecked")
             List<T> rows = (List<T>) query.getResultList();
-            tx.commit();
+            if (tx != null)
+                tx.commit();
             return rows;
         } catch (NoResultException e) {
             if (tx != null)
