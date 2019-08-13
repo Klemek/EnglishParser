@@ -259,6 +259,8 @@ public final class DictionaryManager {
         int verbCount = Verb.getAll().size();
         int adjCount = Adjective.getAll().size();
 
+        long t0 = System.currentTimeMillis();
+
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_synset")) {
 
@@ -306,10 +308,11 @@ public final class DictionaryManager {
                     }
                     if (w != null)
                         w.save();
-                    row++;
-                    if (row % rowstep == 0) {
-                        Logger.log("\tComputed {0} words ({1}%)", row, 100 * row / rowcount);
+                    if (row > 0 && row % rowstep == 0) {
+                        long dt = System.currentTimeMillis() - t0;
+                        Logger.log("\tComputed {0} words ({1}%) (ETA {2})", row, 100 * row / rowcount, Utils.getTimeSpan((long) (rowcount * dt / (float) row)));
                     }
+                    row++;
                 }
             }
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_gloss")) {
@@ -329,10 +332,11 @@ public final class DictionaryManager {
                         d.save();
                     }
 
-                    row++;
-                    if (row % rowstep == 0) {
-                        Logger.log("\tComputed {0} definitions ({1}%)", row, 100 * row / rowcount);
+                    if (row > 0 && row % rowstep == 0) {
+                        long dt = System.currentTimeMillis() - t0;
+                        Logger.log("\tComputed {0} definitions ({1}%) (ETA {2})", row, 100 * row / rowcount, Utils.getTimeSpan((long) (rowcount * dt / (float) row)));
                     }
+                    row++;
                 }
             }
         }
