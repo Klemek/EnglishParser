@@ -416,6 +416,15 @@ public final class DatabaseManager {
         }
     }
 
+    static int getRowCount(ResultSet rs) throws SQLException {
+        int rowcount = 0;
+        if (rs.last()) {
+            rowcount = rs.getRow();
+            rs.beforeFirst();
+        }
+        return rowcount;
+    }
+
     /**
      * Check if a table exists in the database.
      *
