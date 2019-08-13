@@ -5,11 +5,11 @@ CREATE TABLE `db_info` (
 );
 
 CREATE TABLE `dict_word` (
-    `word` VARCHAR(50) NOT NULL,
-    `type` SMALLINT NOT NULL,
-    `syn_set_id` INTEGER NOT NULL,
-    `word_num` SMALLINT NOT NULL,
-    PRIMARY KEY (`syn_set_id`,`word_num`)
+                             `word`       VARCHAR(255) NOT NULL,
+                             `type`       SMALLINT     NOT NULL,
+                             `syn_set_id` INTEGER      NOT NULL,
+                             `word_num`   SMALLINT     NOT NULL,
+                             PRIMARY KEY (`syn_set_id`, `word_num`)
 );
 
 CREATE TABLE `dict_def` (
@@ -20,30 +20,30 @@ CREATE TABLE `dict_def` (
 );
 
 CREATE TABLE `dict_noun` (
-    `base` VARCHAR(50) NOT NULL,
-    `plural` VARCHAR(50) NOT NULL,
-    `male` BIT NOT NULL,
-    `female` VARCHAR(50),
-    `female_plural` VARCHAR(50),
-    PRIMARY KEY (`base`,`plural`)
+                             `base`          VARCHAR(255) NOT NULL,
+                             `plural`        VARCHAR(255) NOT NULL,
+                             `male`          BIT          NOT NULL,
+                             `female`        VARCHAR(255),
+                             `female_plural` VARCHAR(255),
+                             PRIMARY KEY (`base`, `plural`)
 );
 
 CREATE INDEX `IDX_Noun1` ON `dict_noun`(`base`,`plural`);
 CREATE INDEX `IDX_Noun2` ON `dict_noun`(`female`);
 
 CREATE TABLE `dict_verb` (
-    `base` VARCHAR(50) NOT NULL,
-    `past_tense` VARCHAR(50) NOT NULL,
-    `past_part` VARCHAR(50) NOT NULL,
-    `pres_part` VARCHAR(50) NOT NULL,
-    `third_pers` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`base`,`past_tense`,`past_part`)
+                             `base`       VARCHAR(255) NOT NULL,
+                             `past_tense` VARCHAR(255) NOT NULL,
+                             `past_part`  VARCHAR(255) NOT NULL,
+                             `pres_part`  VARCHAR(255) NOT NULL,
+                             `third_pers` VARCHAR(255) NOT NULL,
+                             PRIMARY KEY (`base`, `past_tense`, `past_part`)
 );
 
 CREATE TABLE `dict_adj` (
-    `base` VARCHAR(50) NOT NULL,
-    `adverb` VARCHAR(50) NOT NULL,
-    PRIMARY KEY (`base`,`adverb`)
+                            `base`   VARCHAR(255) NOT NULL,
+                            `adverb` VARCHAR(255) NOT NULL,
+                            PRIMARY KEY (`base`, `adverb`)
 );
 
 INSERT INTO `db_info` () VALUES ();

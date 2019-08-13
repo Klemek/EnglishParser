@@ -1,11 +1,7 @@
 package fr.klemek.englishparser.utils;
 
+import fr.klemek.englishparser.model.dict.*;
 import fr.klemek.logger.Logger;
-import fr.klemek.englishparser.model.dict.Adjective;
-import fr.klemek.englishparser.model.dict.Definition;
-import fr.klemek.englishparser.model.dict.Noun;
-import fr.klemek.englishparser.model.dict.Verb;
-import fr.klemek.englishparser.model.dict.Word;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,60 +35,79 @@ public final class DictionaryManager {
     }
 
     public static boolean init() {
+        return init(false);
+    }
+
+    public static boolean init(boolean skipPreComputed) {
         if (!DatabaseManager.isInitialized()) {
             Logger.log(Level.SEVERE, "Database not initialized, aborting");
             return false;
         }
-        Logger.log("Dictionary {0}initialized", DictionaryManager.isInitialized() ? "":"not ");
+        Logger.log("Dictionary {0}initialized", DictionaryManager.isInitialized() ? "" : "not ");
         if (!initialized) {
             Logger.log("Initializing dictionary...");
             long t0 = System.currentTimeMillis();
             long t1;
             try (Connection conn = DatabaseManager.openConnection(true)) {
-
                 t1 = System.currentTimeMillis();
                 emptyDictionary(conn);
                 Logger.log("\tEmptied dictionary in {0}", Utils.getTimeSpent(t1));
 
-                t1 = System.currentTimeMillis();
-                loadIrregularPlurals();
-                Logger.log("\tLoaded {1} irregular nouns in {0}", Utils.getTimeSpent(t1), irregularPlurals.size());
+                if (!skipPreComputed && FileUtils.resourceFileExists("dict/sql/ep_fill.sql")) {
+                    Logger.log("\tImporting pre-computed data... (this might take a while ~4 min) ");
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/ep_fill");
 
-                t1 = System.currentTimeMillis();
-                loadIrregularThirdPersons();
-                Logger.log("\tLoaded {1} irregular third persons in {0}", Utils.getTimeSpent(t1), irregularThirdPersons.size());
+                    Logger.log("\tImported pre-computed data in {0}", Utils.getTimeSpent(t1));
 
-                t1 = System.currentTimeMillis();
-                loadIrregularVerbs();
-                Logger.log("\tLoaded {1} irregular verbs in {0}", Utils.getTimeSpent(t1), irregularVerbs.size());
+                    Logger.log("\t\t+{0} synonyms' set", Definition.getAll().size());
+                    Logger.log("\t\t+{0} words", Word.getAll().size());
+                    Logger.log("\t\t+{0} definitions", Definition.getAll().size());
+                    Logger.log("\t\t+{0} nouns", Noun.getAll().size());
+                    Logger.log("\t\t+{0} verbs", Verb.getAll().size());
+                    Logger.log("\t\t+{0} adjectives", Adjective.getAll().size());
 
-                t1 = System.currentTimeMillis();
-                loadIrregularAdverbs();
-                Logger.log("\tLoaded {1} irregular adverbs in {0}", Utils.getTimeSpent(t1), irregularAdverbs.size());
+                } else {
+                    t1 = System.currentTimeMillis();
+                    loadIrregularPlurals();
+                    Logger.log("\tLoaded {1} irregular nouns in {0}", Utils.getTimeSpent(t1), irregularPlurals.size());
 
-                t1 = System.currentTimeMillis();
-                loadGenderNouns();
-                Logger.log("\tLoaded {1} gender nouns in {0}", Utils.getTimeSpent(t1), genderNouns.size());
+                    t1 = System.currentTimeMillis();
+                    loadIrregularThirdPersons();
+                    Logger.log("\tLoaded {1} irregular third persons in {0}", Utils.getTimeSpent(t1), irregularThirdPersons.size());
 
-                t1 = System.currentTimeMillis();
-                DatabaseManager.importSQL(conn, "dict/sql/wordnet_init");
-                Logger.log("\tImported wordnet structure in {0}", Utils.getTimeSpent(t1));
+                    t1 = System.currentTimeMillis();
+                    loadIrregularVerbs();
+                    Logger.log("\tLoaded {1} irregular verbs in {0}", Utils.getTimeSpent(t1), irregularVerbs.size());
 
-                Logger.log("\tImporting wordnet data... (this might take a while ~4 min) ");
-                t1 = System.currentTimeMillis();
-                DatabaseManager.importSQL(conn, "dict/sql/wordnet_fill");
-                Logger.log("\tImported wordnet data in {0}", Utils.getTimeSpent(t1));
+                    t1 = System.currentTimeMillis();
+                    loadIrregularAdverbs();
+                    Logger.log("\tLoaded {1} irregular adverbs in {0}", Utils.getTimeSpent(t1), irregularAdverbs.size());
 
-                Logger.log("\tComputing words... (this will take a while ~40 min) ");
-                t1 = System.currentTimeMillis();
-                computeWords(conn);
-                Logger.log("\tComputed words in {0}", Utils.getTimeSpent(t1));
+                    t1 = System.currentTimeMillis();
+                    loadGenderNouns();
+                    Logger.log("\tLoaded {1} gender nouns in {0}", Utils.getTimeSpent(t1), genderNouns.size());
 
-                synSetMapping.clear();
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_init");
+                    Logger.log("\tImported wordnet structure in {0}", Utils.getTimeSpent(t1));
 
-                t1 = System.currentTimeMillis();
-                DatabaseManager.importSQL(conn, "dict/sql/wordnet_drop");
-                Logger.log("\tDropped wordnet structure in {0}", Utils.getTimeSpent(t1));
+                    Logger.log("\tImporting wordnet data... (this might take a while ~4 min) ");
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_fill");
+                    Logger.log("\tImported wordnet data in {0}", Utils.getTimeSpent(t1));
+
+                    Logger.log("\tComputing words... (this will take a while ~40 min) ");
+                    t1 = System.currentTimeMillis();
+                    computeWords(conn);
+                    Logger.log("\tComputed words in {0}", Utils.getTimeSpent(t1));
+
+                    synSetMapping.clear();
+
+                    t1 = System.currentTimeMillis();
+                    DatabaseManager.importSQL(conn, "dict/sql/wordnet_drop");
+                    Logger.log("\tDropped wordnet structure in {0}", Utils.getTimeSpent(t1));
+                }
 
                 DatabaseManager.setDictionaryInitialized(conn, true);
             } catch (Exception e) {
@@ -124,13 +139,13 @@ public final class DictionaryManager {
 
     private static void loadIrregularVerbs() throws IOException {
         irregularVerbs = new HashMap<>();
-        try (BufferedReader reader = Utils.readResourceFile("dict/irregular_verbs.csv")) {
+        try (BufferedReader reader = FileUtils.readResourceFile("dict/irregular_verbs.csv")) {
 
             String line;
             String[][] table;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (Utils.countChar(line, ';') == 2) {
+                if (StringUtils.countChar(line, ';') == 2) {
                     table = Utils.getTable(line, ";", "/");
 
                     if (table.length == 1)
@@ -160,7 +175,7 @@ public final class DictionaryManager {
 
     private static void loadIrregularPlurals() throws IOException {
         irregularPlurals = new HashMap<>();
-        try (BufferedReader reader = Utils.readResourceFile("dict/irregular_plurals.csv")) {
+        try (BufferedReader reader = FileUtils.readResourceFile("dict/irregular_plurals.csv")) {
             String line;
             String[] spl;
             while ((line = reader.readLine()) != null) {
@@ -177,7 +192,7 @@ public final class DictionaryManager {
 
     private static void loadIrregularAdverbs() throws IOException {
         irregularAdverbs = new HashMap<>();
-        try (BufferedReader reader = Utils.readResourceFile("dict/irregular_adverbs.csv")) {
+        try (BufferedReader reader = FileUtils.readResourceFile("dict/irregular_adverbs.csv")) {
 
             String line;
             String[] spl;
@@ -195,7 +210,7 @@ public final class DictionaryManager {
 
     private static void loadIrregularThirdPersons() throws IOException {
         irregularThirdPersons = new HashMap<>();
-        try (BufferedReader reader = Utils.readResourceFile("dict/irregular_third_persons.csv")) {
+        try (BufferedReader reader = FileUtils.readResourceFile("dict/irregular_third_persons.csv")) {
 
             String line;
             String[] spl;
@@ -210,7 +225,7 @@ public final class DictionaryManager {
 
     private static void loadGenderNouns() throws IOException {
         genderNouns = new HashMap<>();
-        try (BufferedReader reader = Utils.readResourceFile("dict/gender_nouns.csv")) {
+        try (BufferedReader reader = FileUtils.readResourceFile("dict/gender_nouns.csv")) {
 
             String line;
             String[] spl;
@@ -338,7 +353,7 @@ public final class DictionaryManager {
         String presPart = getPresentParticiple(word);
         String thirdPers = getThirdPerson(word);
         for (Map.Entry<String, String[]> irregular : irregularVerbs.entrySet())
-            if (Utils.partOf(word, irregular.getKey(), '-')) {
+            if (StringUtils.partOf(word, irregular.getKey(), '-')) {
                 String[] pasts = irregular.getValue();
                 if (pasts[1].length() > 0) {
                     String prefix = word.substring(0, word.lastIndexOf(irregular.getKey()));
@@ -365,7 +380,7 @@ public final class DictionaryManager {
     static String getAdverb(String adj) {
         if (irregularAdverbs != null)
             for (Map.Entry<String, String> irregular : irregularAdverbs.entrySet())
-                if (Utils.partOf(adj, irregular.getKey(), 4)) {
+                if (StringUtils.partOf(adj, irregular.getKey(), 4)) {
                     String prefix = adj.substring(0, adj.lastIndexOf(irregular.getKey()));
                     return prefix + irregular.getValue();
                 }
@@ -384,7 +399,7 @@ public final class DictionaryManager {
     static String getNounPlural(String noun) {
         if (irregularPlurals != null)
             for (Map.Entry<String, String> irregular : irregularPlurals.entrySet())
-                if (Utils.partOf(noun, irregular.getKey(), 4, "man")) {
+                if (StringUtils.partOf(noun, irregular.getKey(), 4, "man")) {
                     String prefix = noun.substring(0, noun.lastIndexOf(irregular.getKey()));
                     return prefix + irregular.getValue();
                 }
@@ -396,7 +411,7 @@ public final class DictionaryManager {
                 noun.charAt(lp) == 's' ||
                 noun.charAt(lp) == 'z')
             return noun + "es";
-        if (noun.charAt(lp) == 'y' && Utils.isConsonant(noun.charAt(lp - 1)))
+        if (noun.charAt(lp) == 'y' && StringUtils.isConsonant(noun.charAt(lp - 1)))
             return noun.substring(0, lp) + "ies";
         return noun + "s";
     }
@@ -407,20 +422,20 @@ public final class DictionaryManager {
             return verb + "ing";
         if (shortVowelConsonant(verb)) //short vowel
             return verb + verb.charAt(lp) + "ing";
-        if (verb.charAt(lp) == 'e' && Utils.isConsonant(verb.charAt(lp - 1)))
+        if (verb.charAt(lp) == 'e' && StringUtils.isConsonant(verb.charAt(lp - 1)))
             return verb.substring(0, lp) + "ing";
         return verb + "ing";
     }
 
     static String getRegularPast(String verb) {
         int lp = verb.length() - 1;
-        if (verb.charAt(lp) == 'y' && Utils.isConsonant(verb.charAt(lp - 1)))
+        if (verb.charAt(lp) == 'y' && StringUtils.isConsonant(verb.charAt(lp - 1)))
             return verb.substring(0, lp) + "ied";
         if (verb.charAt(lp) == 'x' || verb.charAt(lp) == 's') //one consonent sibilants
             return verb + "ed";
         if (shortVowelConsonant(verb)) //short vowel
             return verb + verb.charAt(lp) + "ed";
-        if (verb.charAt(lp) == 'e' && Utils.isConsonant(verb.charAt(lp - 1)))
+        if (verb.charAt(lp) == 'e' && StringUtils.isConsonant(verb.charAt(lp - 1)))
             return verb + "d";
         return verb + "ed";
     }
@@ -430,16 +445,16 @@ public final class DictionaryManager {
                 .replace("qui", "qi")
                 .replace("qua", "qa");
         int lp = word.length() - 1;
-        return Utils.isConsonant(word.charAt(lp)) &&
-                Utils.isVowel(word.charAt(lp - 1)) &&
-                (lp < 2 || Utils.isConsonant(word.charAt(lp - 2)));
+        return StringUtils.isConsonant(word.charAt(lp)) &&
+                StringUtils.isVowel(word.charAt(lp - 1)) &&
+                (lp < 2 || StringUtils.isConsonant(word.charAt(lp - 2)));
     }
 
     static String getThirdPerson(String verb) {
         if (irregularThirdPersons != null && irregularThirdPersons.containsKey(verb))
             return irregularThirdPersons.get(verb);
         int lp = verb.length() - 1;
-        if (verb.charAt(lp) == 'y' && Utils.isConsonant(verb.charAt(lp - 1)))
+        if (verb.charAt(lp) == 'y' && StringUtils.isConsonant(verb.charAt(lp - 1)))
             return verb.substring(0, lp) + "ies";
         if (verb.endsWith("ch") || //sibilants
                 verb.endsWith("zh") ||

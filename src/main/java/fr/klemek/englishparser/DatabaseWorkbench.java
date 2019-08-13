@@ -1,19 +1,17 @@
 package fr.klemek.englishparser;
 
-import fr.klemek.logger.Logger;
+import fr.klemek.englishparser.utils.FileUtils;
+import fr.klemek.englishparser.utils.StringUtils;
 import fr.klemek.englishparser.utils.Utils;
+import fr.klemek.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseWorkbench {
+class DatabaseWorkbench {
 
     private static final String TABLE_CREATE = "" +
             "CREATE TABLE `wb_test` (" +
@@ -50,14 +48,14 @@ public class DatabaseWorkbench {
         }
 
         if (args.length > 1) {
-            Integer tmpmax = Utils.stringToInteger(args[1]);
+            Integer tmpmax = StringUtils.stringToInteger(args[1]);
             if (tmpmax != null)
                 max = tmpmax;
         }
 
         List<String[]> connectionStrings = new ArrayList<>();
 
-        try (BufferedReader reader = Utils.readFile(args[0])) {
+        try (BufferedReader reader = FileUtils.readFile(args[0])) {
             String line;
             String[] spl;
             while ((line = reader.readLine()) != null) {

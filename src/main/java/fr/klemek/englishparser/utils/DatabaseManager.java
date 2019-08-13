@@ -1,43 +1,24 @@
 package fr.klemek.englishparser.utils;
 
-import fr.klemek.logger.Logger;
 import fr.klemek.englishparser.model.DatabaseObject;
-import fr.klemek.englishparser.model.dict.Adjective;
-import fr.klemek.englishparser.model.dict.Definition;
-import fr.klemek.englishparser.model.dict.Noun;
-import fr.klemek.englishparser.model.dict.Verb;
-import fr.klemek.englishparser.model.dict.Word;
-import fr.klemek.englishparser.model.dict.WordObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.logging.Level;
-
-import javax.persistence.NoResultException;
-import javax.persistence.Query;
-
+import fr.klemek.englishparser.model.dict.*;
+import fr.klemek.logger.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.*;
+import java.util.Date;
+import java.util.*;
+import java.util.logging.Level;
+
 /**
  * Utility class that store useful database functions.
- *
- * @author Clement Gouin
  */
 public final class DatabaseManager {
 
@@ -61,13 +42,13 @@ public final class DatabaseManager {
         DatabaseManager.checkDriver(false);
         DatabaseManager.setDefaultConnectionString(defaultConnectionString);
         try (Connection conn = openConnection()) {
-            Logger.log("\tConnection successful with DB user : {0}", Utils.getString(DB_USER));
+            Logger.log("\tConnection successful with DB user : {0}", Config.getString(DB_USER));
         } catch (SQLException e) {
             Logger.log(e, "Cannot connect with DB user");
             return false;
         }
         try (Connection conn = openConnection(true)) {
-            Logger.log("\tConnection successful with DB super user : {0}", Utils.getString("db_super_user"));
+            Logger.log("\tConnection successful with DB super user : {0}", Config.getString("db_super_user"));
         } catch (SQLException e) {
             Logger.log(e, "Cannot connect with DB super user");
             return false;
@@ -85,7 +66,7 @@ public final class DatabaseManager {
      *
      * @param defaultConnectionString the connectionString to set as default
      */
-    public static void setDefaultConnectionString(String defaultConnectionString) {
+    static void setDefaultConnectionString(String defaultConnectionString) {
         DatabaseManager.defaultConnectionString = defaultConnectionString;
     }
 
@@ -156,8 +137,8 @@ public final class DatabaseManager {
     private static Connection openConnection(boolean superuser, String connectionString) throws SQLException {
         if (connectionString == null && defaultConnectionString == null)
             throw new ExceptionInInitializerError("Default ConnectionString is null");
-        String userName = Utils.getString(superuser ? "db_super_user" : DB_USER);
-        String password = Utils.getString(superuser ? "db_super_password" : "db_password");
+        String userName = Config.getString(superuser ? "db_super_user" : DB_USER);
+        String password = Config.getString(superuser ? "db_super_password" : "db_password");
         String url = connectionString == null ? defaultConnectionString : connectionString;
             return DriverManager.getConnection(url, userName, password);
     }
@@ -193,8 +174,8 @@ public final class DatabaseManager {
             sessionFactory = new Configuration().configure()
                     .setProperty("hibernate.connection.url",
                             connectionString == null ? defaultConnectionString : connectionString)
-                    .setProperty("hibernate.connection.username", Utils.getString(DB_USER))
-                    .setProperty("hibernate.connection.password", Utils.getString("db_password"))
+                    .setProperty("hibernate.connection.username", Config.getString(DB_USER))
+                    .setProperty("hibernate.connection.password", Config.getString("db_password"))
                     .addAnnotatedClass(DatabaseObject.class)
                     .addAnnotatedClass(Word.class)
                     .addAnnotatedClass(Definition.class)
@@ -231,7 +212,7 @@ public final class DatabaseManager {
      * @param parameters     named parameters and their values
      * @return the first object or null if not found
      */
-    public static <T> T getFirstFromSessionQueryNamed(String hibernateQuery, Map<String, Object> parameters) {
+    static <T> T getFirstFromSessionQueryNamed(String hibernateQuery, Map<String, Object> parameters) {
         return getFirstFromSessionQueryBase(hibernateQuery, parameters);
     }
 
@@ -307,7 +288,7 @@ public final class DatabaseManager {
      * @param parameters     named parameters and their values
      * @return all the returned rows
      */
-    public static <T> List<T> getRowsFromSessionQueryNamed(String hibernateQuery, Map<String, Object> parameters) {
+    static <T> List<T> getRowsFromSessionQueryNamed(String hibernateQuery, Map<String, Object> parameters) {
         return getRowsFromSessionQueryBase(hibernateQuery, 0, 0, parameters);
     }
 
@@ -381,7 +362,7 @@ public final class DatabaseManager {
      * @throws IOException  if the file is not found
      */
     public static void importSQL(Connection conn, String resourceName) throws IOException, SQLException {
-        if (Utils.getExtension(resourceName) == null)
+        if (FileUtils.getExtension(resourceName) == null)
             resourceName += ".sql";
         try (InputStream is = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream(resourceName)) {
@@ -437,7 +418,7 @@ public final class DatabaseManager {
      * @param name the name of the table
      * @return true if it exists
      */
-    public static boolean tableExists(Connection conn, String name) {
+    static boolean tableExists(Connection conn, String name) {
         try (PreparedStatement st = conn.prepareStatement("SHOW TABLES LIKE ?")) {
             st.setString(1, name);
             try (ResultSet rs = st.executeQuery()) {
@@ -467,7 +448,7 @@ public final class DatabaseManager {
      *
      * @return true if the operation is successful
      */
-    public static boolean updateDatabase() {
+    static boolean updateDatabase() {
         return updateDatabase(null);
     }
 
@@ -478,7 +459,7 @@ public final class DatabaseManager {
      * @return true if the operation is successful
      */
     private static boolean updateDatabase(String connectionString) {
-        int version = Utils.getInt("db_version");
+        int version = Config.getInt("db_version");
         int currentVersion = 0;
 
         long t0 = System.currentTimeMillis();
