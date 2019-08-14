@@ -1,7 +1,7 @@
 CREATE TABLE `db_info` (
-	`version` SMALLINT NOT NULL DEFAULT 0,
-	`update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-	`dict_init` ENUM('0','1') DEFAULT '0'
+                           `version`     SMALLINT  NOT NULL DEFAULT 0,
+                           `update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+                           `dict_init`   SMALLINT  NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `dict_word` (

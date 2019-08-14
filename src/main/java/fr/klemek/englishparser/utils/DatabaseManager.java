@@ -99,8 +99,8 @@ public final class DatabaseManager {
     }
 
     public static void setDictionaryInitialized(Connection conn, boolean initialized) throws SQLException {
-        try (PreparedStatement st = conn.prepareStatement("UPDATE db_info SET dict_init = ? WHERE 1")) {
-            st.setString(1, initialized ? "1" : "0");
+        try (PreparedStatement st = conn.prepareStatement("UPDATE `db_info` SET `dict_init` = ?")) {
+            st.setInt(1, initialized ? 1 : 0);
             st.executeUpdate();
         }
     }
@@ -489,7 +489,7 @@ public final class DatabaseManager {
                         } else {
                             currentVersion = rs.getInt("version");
                             Date lastUpdate = rs.getTimestamp("update_date");
-                            DictionaryManager.setInitialized(rs.getString("dict_init").equals("1"));
+                            DictionaryManager.setInitialized(rs.getInt("dict_init") == 1);
                             Logger.log("\tDatabase v{0} last updated : {1}", currentVersion, lastUpdate);
                         }
                     }
