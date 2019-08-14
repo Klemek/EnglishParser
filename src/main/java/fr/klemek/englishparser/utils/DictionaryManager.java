@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -106,8 +107,6 @@ public final class DictionaryManager {
                     Logger.log("\tComputed words in {0}", Utils.getTimeSpent(t1));
 
                     synSetMapping.clear();
-
-                    tx.commit();
 
                     t1 = System.currentTimeMillis();
                     DatabaseManager.importSQL(conn, "dict/sql/wordnet_drop");
@@ -259,14 +258,15 @@ public final class DictionaryManager {
         int verbCount = Verb.getAll().size();
         int adjCount = Adjective.getAll().size();
 
-        long t0 = System.currentTimeMillis();
-
         try (Statement st = conn.createStatement()) {
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_synset")) {
 
                 int rowcount = DatabaseManager.getRowCount(rs);
                 int row = 0;
-                int rowstep = rowcount / 10;
+                int rowstep = rowcount / 20; // 5% step
+
+                ArrayList<Long> timestamps = new ArrayList<>();
+                timestamps.add(System.currentTimeMillis());
 
                 Word w;
                 String word;
@@ -308,21 +308,16 @@ public final class DictionaryManager {
                     }
                     if (w != null)
                         w.save();
-                    if (row > 0 && row % rowstep == 0) {
-                        long dt = System.currentTimeMillis() - t0;
-                        Logger.log("\tComputed {0} words ({1}%) (ETA {2})", row, 100 * row / rowcount, Utils.getTimeSpan((long) (rowcount * dt / (float) row)));
+
+                    if (row++ > 0 && row % rowstep == 0) {
+                        Logger.log("\tComputed {0} words ({1}%) (ETA {2})", row, Math.round(100 * row / (float) rowcount), Utils.getETA(timestamps, rowstep, rowcount));
                     }
-                    row++;
                 }
             }
             try (ResultSet rs = st.executeQuery("SELECT * FROM wn_gloss")) {
                 String gloss;
                 int synsetId;
                 Definition d;
-
-                int rowcount = DatabaseManager.getRowCount(rs);
-                int row = 0;
-                int rowstep = rowcount / 10;
 
                 while (rs.next()) {
                     gloss = rs.getString("gloss");
@@ -331,12 +326,6 @@ public final class DictionaryManager {
                         d = new Definition(getSynSetId(synsetId), gloss);
                         d.save();
                     }
-
-                    if (row > 0 && row % rowstep == 0) {
-                        long dt = System.currentTimeMillis() - t0;
-                        Logger.log("\tComputed {0} definitions ({1}%) (ETA {2})", row, 100 * row / rowcount, Utils.getTimeSpan((long) (rowcount * dt / (float) row)));
-                    }
-                    row++;
                 }
             }
         }

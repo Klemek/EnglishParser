@@ -81,7 +81,7 @@ public final class Utils {
         return getTimeSpan(System.currentTimeMillis() - t0);
     }
 
-    public static String getTimeSpan(long dt) {
+    static String getTimeSpan(long dt) {
         long sec = dt / 1000;
         dt %= 1000;
         long min = sec / 60;
@@ -93,16 +93,62 @@ public final class Utils {
         if (hour > 0)
             times.add(hour + " h");
         if (min > 0)
-            times.add(min + " m");
-        if (sec > 0 && times.size() < 2)
-            times.add(sec + " s");
-        if (dt > 0 && times.size() < 2)
-            times.add(dt + " ms");
+            times.add((times.size() > 0 ? StringUtils.padLeft("" + min, "0", 2) : min) + " m");
+        if ((times.isEmpty() && sec > 0) || times.size() == 1)
+            times.add((times.size() > 0 ? StringUtils.padLeft("" + sec, "0", 2) : sec) + " s");
+        if (times.size() < 2)
+            times.add((times.size() > 0 ? StringUtils.padLeft("" + dt, "0", 3) : dt) + " ms");
 
         if (times.isEmpty())
             return "no time";
 
         return String.join(" ", times);
+    }
+
+    static String getETA(float processed, float total, long t0) {
+        return getTimeSpan((long) (((System.currentTimeMillis() - t0) / processed) * (total - processed)));
+    }
+
+    static String getETA(List<Long> timestamps, float step, float total) {
+        long t0 = timestamps.get(0);
+        int length = timestamps.size();
+        long t2 = System.currentTimeMillis();
+        timestamps.add(t2);
+        if (length == 1)
+            return getETA(step, total, t0);
+        float current = step * length;
+        long /*min = 0, max = 0,*/ sum = 0;
+        long t1, eta;
+        float processed1;
+        for (int i = 1; i < length; i++) {
+            t1 = timestamps.get(i);
+            processed1 = step * i;
+            eta = getETA(t0, processed1, t1, current, t2, total);
+            /*if (min == 0 || eta < min)
+                min = eta;
+            if (max == 0 || eta > max)
+                max = eta;*/
+            sum += eta;
+        }
+
+        /*System.out.println("min: " + getTimeSpan(min));
+        System.out.println("median: " + getTimeSpan((max + min) / 2));
+        System.out.println("mean: " + getTimeSpan(sum / (length - 1)));
+        System.out.println("max: " + getTimeSpan(max));*/
+
+        return getTimeSpan(sum / (length - 1));
+    }
+
+    private static long getETA(long t0, float processed1, long t1, float processed2, long t2, float total) {
+        float x1 = processed1 / total;
+        float x2 = processed2 / total;
+        float dt1 = t1 - t0;
+        float dt2 = t2 - t0;
+
+        float dk = (dt2 - dt1 * x2 / x1) * (2 / (x2 * (x2 - x1)));
+        float k0 = dt1 / x1 - dk * x1 / 2;
+
+        return (long) (k0 * (1 - x2) + dk * (1 - x2 * x2) / 2);
     }
 
     static String[][] getTable(String src, String reg1, String reg2) {

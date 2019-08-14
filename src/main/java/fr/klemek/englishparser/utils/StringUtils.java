@@ -58,4 +58,11 @@ public final class StringUtils {
                 count++;
         return count;
     }
+
+    static String padLeft(String src, String padding, int size) {
+        StringBuilder sb = new StringBuilder(src);
+        while (sb.length() < size)
+            sb.insert(0, padding);
+        return sb.toString();
+    }
 }
