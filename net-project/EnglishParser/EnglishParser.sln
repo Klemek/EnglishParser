@@ -1,8 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParserConsole", "EnglishParserConsole\EnglishParserConsole.csproj", "{D25698A9-59EA-45BF-BF82-79AE021DEE16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.Console", "EnglishParser.Console\EnglishParser.Console.csproj", "{D25698A9-59EA-45BF-BF82-79AE021DEE16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParserCore", "EnglishParserCore\EnglishParserCore.csproj", "{946E1AEA-0A7A-44D8-8162-021B29A01EA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.Core", "EnglishParser.Core\EnglishParser.Core.csproj", "{946E1AEA-0A7A-44D8-8162-021B29A01EA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.Utils", "EnglishParser.Utils\EnglishParser.Utils.csproj", "{28BD661B-C298-43CE-9724-3DE4A3E9B1F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.Utils.Tests", "EnglishParser.Utils.Tests\EnglishParser.Utils.Tests.csproj", "{67424822-FC92-4D88-B2DB-6C6D7A1038CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.DB", "EnglishParser.DB\EnglishParser.DB.csproj", "{8CF732AB-3E5E-4F7B-B3F1-507741D35DE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +24,17 @@ Global
 		{946E1AEA-0A7A-44D8-8162-021B29A01EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{946E1AEA-0A7A-44D8-8162-021B29A01EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{946E1AEA-0A7A-44D8-8162-021B29A01EA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28BD661B-C298-43CE-9724-3DE4A3E9B1F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28BD661B-C298-43CE-9724-3DE4A3E9B1F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28BD661B-C298-43CE-9724-3DE4A3E9B1F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28BD661B-C298-43CE-9724-3DE4A3E9B1F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67424822-FC92-4D88-B2DB-6C6D7A1038CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67424822-FC92-4D88-B2DB-6C6D7A1038CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67424822-FC92-4D88-B2DB-6C6D7A1038CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67424822-FC92-4D88-B2DB-6C6D7A1038CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF732AB-3E5E-4F7B-B3F1-507741D35DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF732AB-3E5E-4F7B-B3F1-507741D35DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF732AB-3E5E-4F7B-B3F1-507741D35DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF732AB-3E5E-4F7B-B3F1-507741D35DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

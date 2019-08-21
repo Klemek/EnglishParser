@@ -2,10 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <RootNamespace>EnglishParser.Utils</RootNamespace>
     </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Trove.Nini" Version="1.1.0" />
-    </ItemGroup>
 
 </Project>
