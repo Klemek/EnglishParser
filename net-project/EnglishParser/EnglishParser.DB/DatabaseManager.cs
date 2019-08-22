@@ -15,6 +15,7 @@ namespace EnglishParser.DB
         public static bool Initialized { get; private set; }
         public static DatabaseEntities Entities { get; private set; }
         private static IConfig _config;
+        private static bool _verbose;
 
         #region Connect
 
@@ -54,21 +55,22 @@ namespace EnglishParser.DB
 
         public static void Init(IConfig config)
         {
-            Console.Out.WriteLine("Initializing database...");
+            _verbose = config.GetBoolean("Verbose");
+            if(_verbose) Console.Out.WriteLine("Initializing database...");
             long t0 = TimeUtils.Now();
             _config = config;
-            Console.Error.WriteLine("Connecting successful with DB user \"{0}\"...", _config.GetString("User"));
+            if(_verbose) Console.Error.WriteLine("Connecting successful with DB user \"{0}\"...", _config.GetString("User"));
             Connect();
-            Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
+            if(_verbose) Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
                 _config.GetString("SuperUser"));
             Connect(true);
             Entities = new DatabaseEntities(BuildEntityConnectionString());
             UpgradeDatabase();
             Initialized = true;
-            Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
+            if(_verbose) Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
         }
 
-        private static void UpgradeDatabase()
+        public static void UpgradeDatabase()
         {
             int version = _config.GetInt("Version");
             int currentVersion = -1;
@@ -79,7 +81,7 @@ namespace EnglishParser.DB
             {
                 if (!TableExists(conn, "db_info"))
                 {
-                    Console.Out.WriteLine("\tNo information on database, assuming empty");
+                    if(_verbose) Console.Out.WriteLine("\tNo information on database, assuming empty");
                 }
                 else
                 {
@@ -87,7 +89,7 @@ namespace EnglishParser.DB
                     {
                         if (!reader.HasRows)
                         {
-                            Console.Out.WriteLine("\tNo information on database, assuming empty");
+                            if(_verbose) Console.Out.WriteLine("\tNo information on database, assuming empty");
                         }
                         else
                         {
@@ -95,7 +97,7 @@ namespace EnglishParser.DB
                             currentVersion = reader.GetInt16("version");
                             DateTime lastUpdate = reader.GetDateTime("update_date");
                             //DictionaryManager.Initialized = reader.GetInt16("dict_init") == 1;
-                            Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
+                            if(_verbose) Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
                         }
                     });
                 }
@@ -103,7 +105,7 @@ namespace EnglishParser.DB
                 while (currentVersion < version)
                     UpgradeDatabaseToVersion(conn, ++currentVersion);
 
-                Console.Out.WriteLine("\tDatabase up to date in {0}", TimeUtils.GetTimeSpent(t0));
+                if(_verbose) Console.Out.WriteLine("\tDatabase up to date in {0}", TimeUtils.GetTimeSpent(t0));
             }
         }
 
@@ -112,12 +114,12 @@ namespace EnglishParser.DB
             string filePath;
             if (version == 0)
             {
-                Console.Out.WriteLine("\tCleaning database...");
+                if(_verbose) Console.Out.WriteLine("\tCleaning database...");
                 filePath = "sql/clean.sql";
             }
             else
             {
-                Console.Out.WriteLine("\tUpgrading to v{0}...", version);
+                if(_verbose) Console.Out.WriteLine("\tUpgrading to v{0}...", version);
                 filePath = $"sql/v{version}.sql";
             }
 
@@ -131,10 +133,7 @@ namespace EnglishParser.DB
                 if (version > 0)
                 {
                     ExecSql(conn, "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1",
-                        new Dictionary<string, object>
-                        {
-                            {"@version", version}
-                        });
+                        ("@version", version));
                 }
 
                 transaction.Commit();
@@ -147,44 +146,38 @@ namespace EnglishParser.DB
 
             List<string> endTables = ListTables(conn);
 
-            foreach (string table in startTables.Where(t => !endTables.Contains(t)))
-                Console.Out.WriteLine("\t\t(-) table {0}", table);
-            foreach (string table in endTables.Where(t => !startTables.Contains(t)))
-                Console.Out.WriteLine("\t\t(+) table {0}", table);
+            if (_verbose)
+            {
+                foreach (string table in startTables.Where(t => !endTables.Contains(t)))
+                    Console.Out.WriteLine("\t\t(-) table {0}", table);
+                foreach (string table in endTables.Where(t => !startTables.Contains(t)))
+                    Console.Out.WriteLine("\t\t(+) table {0}", table);
+            }
         }
 
         #endregion
 
         #region SQLCommand
 
-        public static void ExecSql(MySqlConnection conn, string command, Dictionary<string, object> args = null)
+        public static void ExecSql(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
         {
-            if (args == null) args = new Dictionary<string, object>();
             using (MySqlCommand cmd = new MySqlCommand(command, conn))
             {
-                foreach (string param in args.Keys)
-                    cmd.Parameters.AddWithValue(param, args[param]);
+                foreach (ValueTuple<string, object> param in args)
+                    cmd.Parameters.AddWithValue(param.Item1, param.Item2);
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public static void QuerySql(MySqlConnection conn, string command, Action<MySqlDataReader> action)
+        public static void QuerySql(MySqlConnection conn, string command,
+            Action<MySqlDataReader> action, params ValueTuple<string, object>[] args)
         {
-            QuerySql(conn, command, new Dictionary<string, object>(), action);
-        }
-
-        public static void QuerySql(MySqlConnection conn, string command, Dictionary<string, object> args,
-            Action<MySqlDataReader> action)
-        {
-            if (args == null) args = new Dictionary<string, object>();
             using (MySqlCommand cmd = new MySqlCommand(command, conn))
             {
-                foreach (string param in args.Keys)
-                    cmd.Parameters.AddWithValue(param, args[param]);
+                foreach (ValueTuple<string, object> param in args)
+                    cmd.Parameters.AddWithValue(param.Item1, param.Item2);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
                     action(reader);
-                }
             }
         }
 
@@ -233,10 +226,7 @@ namespace EnglishParser.DB
         public static bool TableExists(MySqlConnection conn, String name)
         {
             bool exists = false;
-            QuerySql(conn, "SHOW TABLES LIKE @name", new Dictionary<string, object>
-            {
-                {"@name", name}
-            }, reader => { exists = reader.HasRows; });
+            QuerySql(conn, "SHOW TABLES LIKE @name", reader => { exists = reader.HasRows; }, ("@name", name));
             return exists;
         }
 

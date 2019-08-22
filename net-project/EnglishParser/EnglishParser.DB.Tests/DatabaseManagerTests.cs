@@ -6,52 +6,70 @@ using NUnit.Framework;
 
 namespace EnglishParser.DB.Tests
 {
+    [TestFixture]
     public class DatabaseManagerTests
     {
         private static IConfig _config;
+        private static MySqlConnection _conn;
 
         private void CleanDatabase()
         {
-            using (MySqlConnection conn = DatabaseManager.Connect(true))
-                CleanDatabase(conn);
+            DatabaseManager.ImportSql(typeof(DatabaseManager).Assembly, _conn, "sql/clean.sql");
         }
-        
-        private void CleanDatabase(MySqlConnection conn)
+
+
+        [OneTimeSetUp]
+        public void Init()
         {
-            DatabaseManager.ImportSql(typeof(DatabaseManager).Assembly, conn, "sql/clean.sql");
+            _config = new IniConfigSource("TestDatabase.ini").Configs["Database"];
+            DatabaseManager.Init(_config);
+            _conn = DatabaseManager.Connect(true);
         }
-        
+
+        [OneTimeTearDown]
+        public void Cleanup()
+        {
+            _conn.Close();
+        }
+
         [SetUp]
         public void Setup()
         {
-            _config = new IniConfigSource("TestDatabase.ini").Configs["Database"];
             DatabaseManager.Init(_config);
         }
 
         [Test]
         public void ListTables()
         {
-            using (MySqlConnection conn = DatabaseManager.Connect(true))
-            {
-                List<string> tables = DatabaseManager.ListTables(conn);
-                Assert.Contains("db_info", tables);
-                Assert.Greater(tables.Count, 1);
-                CleanDatabase(conn);
-                tables = DatabaseManager.ListTables(conn);
-                Assert.AreEqual(0, tables.Count);
-            }
+            List<string> tables = DatabaseManager.ListTables(_conn);
+            Assert.Contains("db_info", tables);
+            Assert.Greater(tables.Count, 1);
+            CleanDatabase();
+            tables = DatabaseManager.ListTables(_conn);
+            Assert.AreEqual(0, tables.Count);
         }
-        
+
         [Test]
         public void TableExists()
         {
-            using (MySqlConnection conn = DatabaseManager.Connect(true))
+            Assert.True(DatabaseManager.TableExists(_conn, "db_info"));
+            Assert.False(DatabaseManager.TableExists(_conn, "db_info_2"));
+            CleanDatabase();
+            Assert.False(DatabaseManager.TableExists(_conn, "db_info"));
+        }
+
+        [Test]
+        public void UpgradeDatabase()
+        {
+            CleanDatabase();
+            Assert.False(DatabaseManager.TableExists(_conn, "db_info"));
+            DatabaseManager.UpgradeDatabase();
+            Assert.True(DatabaseManager.TableExists(_conn, "db_info"));
+            DatabaseManager.QuerySql(_conn, "SELECT * FROM db_info", reader =>
             {
-                Assert.True(DatabaseManager.TableExists(conn, "db_info"));
-                Assert.False(DatabaseManager.TableExists(conn, "db_info_2"));
-                CleanDatabase(conn);
-                Assert.False(DatabaseManager.TableExists(conn, "db_info"));
-            }
+                reader.Read();
+                Assert.AreEqual(_config.GetInt("Version"), reader.GetInt32("version"));
+            });
         }
     }
 }
