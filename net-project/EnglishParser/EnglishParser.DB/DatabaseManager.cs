@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity.Core.EntityClient;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,7 @@ namespace EnglishParser.DB
     public static class DatabaseManager
     {
         public static bool Initialized { get; private set; }
+        public static bool DictInitialized { get; private set; }
         public static DatabaseEntities Entities { get; private set; }
         private static IConfig _config;
         private static bool _verbose;
@@ -39,16 +41,6 @@ namespace EnglishParser.DB
             return builder.ConnectionString;
         }
 
-        private static string BuildEntityConnectionString(bool admin = false)
-        {
-            EntityConnectionStringBuilder builder = new EntityConnectionStringBuilder()
-            {
-                Provider = "System.Data.SqlClient",
-                ProviderConnectionString = BuildConnectionString(admin)
-            };
-            return builder.ConnectionString;
-        }
-
         #endregion
 
         #region InitAndUpgrade
@@ -64,7 +56,7 @@ namespace EnglishParser.DB
             if(_verbose) Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
                 _config.GetString("SuperUser"));
             Connect(true);
-            Entities = new DatabaseEntities(BuildEntityConnectionString());
+            Entities = new DatabaseEntities(Connect(true));
             UpgradeDatabase();
             Initialized = true;
             if(_verbose) Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
@@ -96,7 +88,7 @@ namespace EnglishParser.DB
                             reader.Read();
                             currentVersion = reader.GetInt16("version");
                             DateTime lastUpdate = reader.GetDateTime("update_date");
-                            //DictionaryManager.Initialized = reader.GetInt16("dict_init") == 1;
+                            DictInitialized = reader.GetInt16("dict_init") == 1;
                             if(_verbose) Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
                         }
                     });
