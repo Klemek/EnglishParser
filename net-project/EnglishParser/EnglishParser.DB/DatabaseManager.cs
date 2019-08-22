@@ -13,13 +13,47 @@ namespace EnglishParser.DB
     public static class DatabaseManager
     {
         public static bool Initialized { get; private set; }
-        private static DatabaseEntities _db;
+        public static DatabaseEntities Entities { get; private set; }
         private static IConfig _config;
+
+        #region Connect
+
+        public static MySqlConnection Connect(bool admin = false)
+        {
+            MySqlConnection conn = new MySqlConnection(BuildConnectionString(admin));
+            conn.Open();
+            return conn;
+        }
+
+        private static string BuildConnectionString(bool admin = false)
+        {
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder()
+            {
+                Server = _config.GetString("Host"),
+                Port = (uint) _config.GetInt("Port"),
+                Database = _config.GetString("Database"),
+                UserID = admin ? _config.GetString("SuperUser") : _config.GetString("User"),
+                Password = admin ? _config.GetString("SuperPassword") : _config.GetString("Password"),
+            };
+            return builder.ConnectionString;
+        }
+
+        private static string BuildEntityConnectionString(bool admin = false)
+        {
+            EntityConnectionStringBuilder builder = new EntityConnectionStringBuilder()
+            {
+                Provider = "System.Data.SqlClient",
+                ProviderConnectionString = BuildConnectionString(admin)
+            };
+            return builder.ConnectionString;
+        }
+
+        #endregion
+
+        #region InitAndUpgrade
 
         public static void Init(IConfig config)
         {
-            if (Initialized)
-                return;
             Console.Out.WriteLine("Initializing database...");
             long t0 = TimeUtils.Now();
             _config = config;
@@ -28,13 +62,13 @@ namespace EnglishParser.DB
             Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
                 _config.GetString("SuperUser"));
             Connect(true);
-            _db = new DatabaseEntities(BuildEntityConnectionString());
-            UpdateDatabase();
+            Entities = new DatabaseEntities(BuildEntityConnectionString());
+            UpgradeDatabase();
             Initialized = true;
             Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
         }
 
-        private static void UpdateDatabase()
+        private static void UpgradeDatabase()
         {
             int version = _config.GetInt("Version");
             int currentVersion = -1;
@@ -49,8 +83,7 @@ namespace EnglishParser.DB
                 }
                 else
                 {
-                    using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM db_info", conn))
-                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    QuerySql(conn, "SELECT * FROM db_info", reader =>
                     {
                         if (!reader.HasRows)
                         {
@@ -64,17 +97,17 @@ namespace EnglishParser.DB
                             //DictionaryManager.Initialized = reader.GetInt16("dict_init") == 1;
                             Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
                         }
-                    }
+                    });
                 }
 
                 while (currentVersion < version)
-                    UpdateDatabaseToVersion(conn, ++currentVersion);
+                    UpgradeDatabaseToVersion(conn, ++currentVersion);
 
                 Console.Out.WriteLine("\tDatabase up to date in {0}", TimeUtils.GetTimeSpent(t0));
             }
         }
 
-        private static void UpdateDatabaseToVersion(MySqlConnection conn, int version)
+        private static void UpgradeDatabaseToVersion(MySqlConnection conn, int version)
         {
             string filePath;
             if (version == 0)
@@ -97,12 +130,11 @@ namespace EnglishParser.DB
                 ImportSql(conn, filePath);
                 if (version > 0)
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(
-                        "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@version", version);
-                        cmd.ExecuteNonQuery();
-                    }
+                    ExecSql(conn, "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1",
+                        new Dictionary<string, object>
+                        {
+                            {"@version", version}
+                        });
                 }
 
                 transaction.Commit();
@@ -119,6 +151,41 @@ namespace EnglishParser.DB
                 Console.Out.WriteLine("\t\t(-) table {0}", table);
             foreach (string table in endTables.Where(t => !startTables.Contains(t)))
                 Console.Out.WriteLine("\t\t(+) table {0}", table);
+        }
+
+        #endregion
+
+        #region SQLCommand
+
+        public static void ExecSql(MySqlConnection conn, string command, Dictionary<string, object> args = null)
+        {
+            if (args == null) args = new Dictionary<string, object>();
+            using (MySqlCommand cmd = new MySqlCommand(command, conn))
+            {
+                foreach (string param in args.Keys)
+                    cmd.Parameters.AddWithValue(param, args[param]);
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static void QuerySql(MySqlConnection conn, string command, Action<MySqlDataReader> action)
+        {
+            QuerySql(conn, command, new Dictionary<string, object>(), action);
+        }
+
+        public static void QuerySql(MySqlConnection conn, string command, Dictionary<string, object> args,
+            Action<MySqlDataReader> action)
+        {
+            if (args == null) args = new Dictionary<string, object>();
+            using (MySqlCommand cmd = new MySqlCommand(command, conn))
+            {
+                foreach (string param in args.Keys)
+                    cmd.Parameters.AddWithValue(param, args[param]);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    action(reader);
+                }
+            }
         }
 
         public static void ImportSql(MySqlConnection conn, string resourceName)
@@ -148,8 +215,7 @@ namespace EnglishParser.DB
                         foreach (Match match in rx.Matches(buffer).Reverse())
                             buffer = buffer.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
                                      buffer.Substring(match.Groups[1].Index + match.Groups[1].Length);
-                        using (MySqlCommand cmd = new MySqlCommand(buffer, conn))
-                            cmd.ExecuteNonQuery();
+                        ExecSql(conn, buffer);
                         buffer = "";
                     }
                     else
@@ -160,58 +226,31 @@ namespace EnglishParser.DB
             });
         }
 
+        #endregion
+
+        #region Utils
+
         public static bool TableExists(MySqlConnection conn, String name)
         {
-            using (MySqlCommand cmd = new MySqlCommand("SHOW TABLES LIKE @name", conn))
+            bool exists = false;
+            QuerySql(conn, "SHOW TABLES LIKE @name", new Dictionary<string, object>
             {
-                cmd.Parameters.AddWithValue("@name", name);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    return reader.HasRows;
-                }
-            }
+                {"@name", name}
+            }, reader => { exists = reader.HasRows; });
+            return exists;
         }
 
         public static List<string> ListTables(MySqlConnection conn)
         {
-            using (MySqlCommand cmd = new MySqlCommand("SHOW TABLES", conn))
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            List<string> tables = new List<string>();
+            QuerySql(conn, "SHOW TABLES", reader =>
             {
-                List<string> tables = new List<string>();
                 while (reader.Read())
                     tables.Add(reader.GetString(0));
-                return tables;
-            }
+            });
+            return tables;
         }
 
-        private static string BuildConnectionString(bool admin = false)
-        {
-            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder()
-            {
-                Server = _config.GetString("Host"),
-                Port = (uint) _config.GetInt("Port"),
-                Database = _config.GetString("Database"),
-                UserID = admin ? _config.GetString("SuperUser") : _config.GetString("User"),
-                Password = admin ? _config.GetString("SuperPassword") : _config.GetString("Password"),
-            };
-            return builder.ConnectionString;
-        }
-
-        private static string BuildEntityConnectionString(bool admin = false)
-        {
-            EntityConnectionStringBuilder builder = new EntityConnectionStringBuilder()
-            {
-                Provider = "System.Data.SqlClient",
-                ProviderConnectionString = BuildConnectionString(admin)
-            };
-            return builder.ConnectionString;
-        }
-
-        public static MySqlConnection Connect(bool admin = false)
-        {
-            MySqlConnection conn = new MySqlConnection(BuildConnectionString(admin));
-            conn.Open();
-            return conn;
-        }
+        #endregion
     }
 }
