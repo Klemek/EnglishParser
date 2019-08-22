@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using EnglishParser.Core;
+using Nini.Config;
 
 namespace EnglishParser.Console
 {
@@ -8,7 +9,8 @@ namespace EnglishParser.Console
         static void Main(string[] args)
         {
             System.Console.WriteLine(Assembly.GetExecutingAssembly().GetName().Name);
-            Core.EnglishParser.Init();
+            IConfigSource source = new IniConfigSource("EnglishParser.ini");
+            Core.EnglishParser.Init(source.Configs);
         }
     }
 }
