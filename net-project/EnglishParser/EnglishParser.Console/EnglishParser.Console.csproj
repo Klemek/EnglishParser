@@ -10,4 +10,10 @@
       <ProjectReference Include="..\EnglishParser.Core\EnglishParser.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="EnglishParser.ini">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

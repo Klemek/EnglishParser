@@ -5,10 +5,9 @@ namespace EnglishParser.Core
 {
     public static class EnglishParser
     {
-        public static void Init()
+        public static void Init(ConfigCollection configs)
         {
-            IConfigSource source = new IniConfigSource("EnglishParser.ini");
-            DatabaseManager.Init(source.Configs["Database"]);
+            DatabaseManager.Init(configs["Database"]);
         }
     }
 }
