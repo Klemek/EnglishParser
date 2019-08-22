@@ -1,12 +1,15 @@
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using EnglishParser.Core.Model;
+using MySql.Data.EntityFramework;
 
 namespace EnglishParser.DB
 {
+    [DbConfigurationType(typeof(MySqlEFConfiguration))]
     public class DatabaseEntities : DbContext
     {
-        public DatabaseEntities(string nameOrConnectionString) : base(nameOrConnectionString)
+        public DatabaseEntities(DbConnection existingConnection) : base(existingConnection, true)
         {
         }
 

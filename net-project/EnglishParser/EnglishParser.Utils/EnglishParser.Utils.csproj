@@ -5,4 +5,9 @@
         <RootNamespace>EnglishParser.Utils</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="MySql.Data.EntityFramework" Version="8.0.17" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+    </ItemGroup>
+
 </Project>

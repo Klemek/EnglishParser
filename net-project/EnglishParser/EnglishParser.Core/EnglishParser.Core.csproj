@@ -6,11 +6,50 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="EntityFramework" Version="6.2.0" />
+      <PackageReference Include="MySql.Data" Version="8.0.17" />
+      <PackageReference Include="MySql.Data.EntityFramework" Version="8.0.17" />
+      <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
       <PackageReference Include="Trove.Nini" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\EnglishParser.DB\EnglishParser.DB.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\dict\sql\ep_fill.sql" />
+      <EmbeddedResource Include="Resources\dict\sql\ep_fill.sql" />
+      <None Remove="Resources\dict\sql\wordnet_drop.sql" />
+      <EmbeddedResource Include="Resources\dict\sql\wordnet_drop.sql" />
+      <None Remove="Resources\dict\sql\wordnet_fill.sql" />
+      <EmbeddedResource Include="Resources\dict\sql\wordnet_fill.sql" />
+      <None Remove="Resources\dict\sql\wordnet_init.sql" />
+      <EmbeddedResource Include="Resources\dict\sql\wordnet_init.sql" />
+      <None Remove="Resources\dict\gender_nouns.csv" />
+      <EmbeddedResource Include="Resources\dict\gender_nouns.csv" />
+      <None Remove="Resources\dict\irregular_adverbs.csv" />
+      <EmbeddedResource Include="Resources\dict\irregular_adverbs.csv" />
+      <None Remove="Resources\dict\irregular_plurals.csv" />
+      <EmbeddedResource Include="Resources\dict\irregular_plurals.csv" />
+      <None Remove="Resources\dict\irregular_third_persons.csv" />
+      <EmbeddedResource Include="Resources\dict\irregular_third_persons.csv" />
+      <None Remove="Resources\dict\irregular_verbs.csv" />
+      <EmbeddedResource Include="Resources\dict\irregular_verbs.csv" />
+      <None Remove="Resources\dict\uncountable_nouns.csv" />
+      <EmbeddedResource Include="Resources\dict\uncountable_nouns.csv" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="app.config" />
+      <Content Include="app.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

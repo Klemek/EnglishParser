@@ -6,7 +6,6 @@ using NUnit.Framework;
 
 namespace EnglishParser.DB.Tests
 {
-    [TestFixture]
     public class DatabaseManagerTests
     {
         private static IConfig _config;
