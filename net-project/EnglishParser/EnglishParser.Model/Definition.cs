@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EnglishParser.DB.Model
+namespace EnglishParser.Model
 {
     public class Definition
     {

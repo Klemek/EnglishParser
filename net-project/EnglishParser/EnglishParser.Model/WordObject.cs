@@ -1,8 +1,6 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EnglishParser.DB.Model
+namespace EnglishParser.Model
 {
     public abstract class WordObject
     {
