@@ -10,9 +10,7 @@ namespace EnglishParser.Core
         public static void Init(ConfigCollection configs)
         {
             DatabaseManager.Init(configs["Database"]);
-            Console.Out.WriteLine("\t+ {0} Words", DatabaseManager.Entities.Words.Count());
-            //DictionaryManager.Init(configs["Dictionary"]);
+            DictionaryManager.Init(configs["Dictionary"]);
         }
-        
     }
 }

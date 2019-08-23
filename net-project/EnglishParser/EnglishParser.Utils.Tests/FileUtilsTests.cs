@@ -12,7 +12,7 @@ namespace EnglishParser.Utils.Tests
         [Test]
         public void ReadResource()
         {
-            Assert.AreEqual("Hello there",FileUtils.ReadResource("Sample.txt"));
+            Assert.AreEqual("Hello there", FileUtils.ReadResource("Sample.txt"));
         }
     }
 }

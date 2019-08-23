@@ -1,14 +1,9 @@
 using System;
 
-namespace EnglishParser.Core.Model
+namespace EnglishParser.DB.Model
 {
     public class Verb : WordObject
     {
-        public string PastTense { get; set; }
-        public string PastParticiple { get; set; }
-        public string PresParticiple { get; set; }
-        public string ThirdPerson { get; set; }
-
         public Verb()
         {
         }
@@ -21,5 +16,10 @@ namespace EnglishParser.Core.Model
             PresParticiple = presParticiple ?? throw new ArgumentNullException(nameof(presParticiple));
             ThirdPerson = thirdPerson ?? throw new ArgumentNullException(nameof(thirdPerson));
         }
+
+        public string PastTense { get; set; }
+        public string PastParticiple { get; set; }
+        public string PresParticiple { get; set; }
+        public string ThirdPerson { get; set; }
     }
 }
