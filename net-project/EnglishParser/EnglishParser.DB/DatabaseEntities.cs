@@ -76,6 +76,7 @@ namespace EnglishParser.DB
                     .IsUnicode(false);
                 entity.Property(e => e.Male)
                     .HasColumnName("male")
+                    .HasColumnType("bit")
                     .IsRequired();
                 entity.Property(e => e.Female)
                     .HasColumnName("female")

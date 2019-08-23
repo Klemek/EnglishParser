@@ -13,9 +13,10 @@ namespace EnglishParser.DB
     {
         private static IConfig _config;
         private static bool _verbose;
+        private static int _maxAllowedPacket = -1;
         public static bool Initialized { get; private set; }
         public static bool DictInitialized { get; private set; }
-        public static DatabaseEntities Entities { get; private set; }
+        public static DatabaseEntities DbContext { get; private set; }
 
         #region Connect
 
@@ -56,7 +57,7 @@ namespace EnglishParser.DB
                 Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
                     _config.GetString("SuperUser"));
             Connect(true);
-            Entities = new DatabaseEntities(BuildConnectionString(true));
+            DbContext = new DatabaseEntities(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
             if (_verbose) Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
@@ -181,37 +182,30 @@ namespace EnglishParser.DB
 
         public static void ImportSql(Assembly assembly, MySqlConnection conn, string filePath)
         {
-            var delimiter = ';';
-            var buffer = "";
-            var rx = new Regex(@"@(\w+)");
-            FileUtils.ReadResource(assembly, filePath, line =>
-            {
-                if (line.Length > 0 && !line.StartsWith("/*"))
+            ImportSqlData(conn, FileUtils.ReadResource(assembly, filePath));
+        }
+
+        private static void ImportSqlData(MySqlConnection conn, string data)
+        {
+            if (_maxAllowedPacket == -1)
+                QuerySql(conn, "SHOW VARIABLES WHERE variable_name = 'max_allowed_packet'", reader =>
                 {
-                    line = line.Replace("\\\"", "\"");
-                    if (line[0] == '@')
-                    {
-                        ImportSql(assembly, conn, line.Substring(1));
-                    }
-                    else if (line.ToUpper().StartsWith("DELIMITER"))
-                    {
-                        delimiter = line.Split(" ")[1][0];
-                    }
-                    else if (line[line.Length - 1] == delimiter)
-                    {
-                        buffer += line.Substring(0, line.Length - 1);
-                        foreach (var match in rx.Matches(buffer).Reverse())
-                            buffer = buffer.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
-                                     buffer.Substring(match.Groups[1].Index + match.Groups[1].Length);
-                        ExecSql(conn, buffer);
-                        buffer = "";
-                    }
-                    else
-                    {
-                        buffer += line + "\n";
-                    }
-                }
-            });
+                    reader.Read();
+                    _maxAllowedPacket = reader.GetInt32("value");
+                });
+            while (data.Length > _maxAllowedPacket)
+            {
+                int split = data.Substring(0, _maxAllowedPacket).LastIndexOf(";", StringComparison.Ordinal);
+                ImportSqlData(conn, data.Substring(0, split + 1));
+                data = data.Substring(split + 1);
+            }
+            data = data.Replace("\n", "").Replace("\r", "");
+            var rx = new Regex(@"@(\w+)");
+            foreach (Match match in rx.Matches(data).Reverse())
+                data = data.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
+                       data.Substring(match.Groups[1].Index + match.Groups[1].Length);
+            using (var cmd = new MySqlCommand(data, conn))
+                cmd.ExecuteNonQuery();
         }
 
         #endregion

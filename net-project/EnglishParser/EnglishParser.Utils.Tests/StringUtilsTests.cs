@@ -17,5 +17,11 @@ namespace EnglishParser.Utils.Tests
             Assert.AreEqual("00000", StringUtils.PadLeft("", "0", 5));
             Assert.AreEqual("aabbcc", StringUtils.PadLeft("bbcc", "aa", 5));
         }
+
+        [Test]
+        public void ReadTable()
+        {
+            Assert.AreEqual(new[,] {{"a", "b"}, {"d", "e"}}, StringUtils.ReadTable("a.b.c-d.e", ".", "-"));
+        }
     }
 }

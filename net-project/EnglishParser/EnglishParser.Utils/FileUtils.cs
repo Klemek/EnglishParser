@@ -13,18 +13,10 @@ namespace EnglishParser.Utils
 
         public static string ReadResource(string filePath)
         {
-            var assembly = Assembly.GetCallingAssembly();
-            var resourceName = GetResourceName(assembly, filePath);
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader =
-                new StreamReader(
-                    stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
-            {
-                return reader.ReadToEnd();
-            }
+            return ReadResource(Assembly.GetCallingAssembly(), filePath);
         }
-
-        public static void ReadResource(Assembly assembly, string filePath, Action<string> readLine)
+        
+        public static string ReadResource(Assembly assembly, string filePath)
         {
             var resourceName = GetResourceName(assembly, filePath);
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -32,8 +24,7 @@ namespace EnglishParser.Utils
                 new StreamReader(
                     stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
             {
-                string line;
-                while ((line = reader.ReadLine()) != null) readLine(line);
+                return reader.ReadToEnd();
             }
         }
     }
