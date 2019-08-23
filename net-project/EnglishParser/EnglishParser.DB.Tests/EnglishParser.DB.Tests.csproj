@@ -7,11 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MySql.Data.EntityFramework" Version="8.0.17" />
         <PackageReference Include="nunit" Version="3.11.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
         <PackageReference Include="Trove.Nini" Version="1.1.0" />
     </ItemGroup>
 

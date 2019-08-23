@@ -1,11 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EnglishParser.Core.Model
+namespace EnglishParser.DB.Model
 {
     public abstract class WordObject
     {
-        public string Base { get; set; }
-
         protected WordObject()
         {
         }
@@ -14,5 +14,7 @@ namespace EnglishParser.Core.Model
         {
             Base = @base ?? throw new ArgumentNullException(nameof(@base));
         }
+        
+        public string Base { get; set; }
     }
 }

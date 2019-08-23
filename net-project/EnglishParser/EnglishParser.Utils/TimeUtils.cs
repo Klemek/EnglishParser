@@ -8,20 +8,21 @@ namespace EnglishParser.Utils
         {
             return DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
-        
+
         public static string GetTimeSpent(long t0)
         {
-            return GetTimeSpan(TimeUtils.Now() - t0);
+            return GetTimeSpan(Now() - t0);
         }
+
         public static string GetTimeSpan(long ms)
         {
-            long s = ms / 1000;
+            var s = ms / 1000;
             ms %= 1000;
-            long m = s / 60;
+            var m = s / 60;
             s %= 60;
-            long h = m / 60;
+            var h = m / 60;
             m %= 60;
-            long d = h / 24;
+            var d = h / 24;
             h %= 24;
             if (d > 0)
                 return $"{d.ToString()} d {StringUtils.PadLeft(h.ToString(), "0", 2)} h";

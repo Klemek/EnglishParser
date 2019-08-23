@@ -1,12 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EnglishParser.Core.Model
+namespace EnglishParser.DB.Model
 {
     public class Adjective : WordObject
 
     {
-        public string Adverb { get; set; }
-
         public Adjective()
         {
         }
@@ -15,5 +15,7 @@ namespace EnglishParser.Core.Model
         {
             Adverb = adverb ?? throw new ArgumentNullException(nameof(adverb));
         }
+        
+        public string Adverb { get; set; }
     }
 }
