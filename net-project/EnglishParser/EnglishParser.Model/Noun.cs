@@ -8,17 +8,26 @@ namespace EnglishParser.Model
         {
         }
 
-        public Noun(string @base, string plural, bool male, string female, string femalePlural) : base(@base)
+        public Noun(string @base, string plural) : base(@base)
         {
             Plural = plural ?? throw new ArgumentNullException(nameof(plural));
-            Male = male;
-            Female = female ?? throw new ArgumentNullException(nameof(female));
-            FemalePlural = femalePlural ?? throw new ArgumentNullException(nameof(femalePlural));
+        }
+
+        public Noun(string @base, string plural, string female, string femalePlural) : this(@base, plural)
+        {
+            SetFemale(female, femalePlural);
         }
         
         public string Plural { get; set; }
         public bool Male { get; set; }
         public string Female { get; set; }
         public string FemalePlural { get; set; }
+        
+        public void SetFemale(string female, string femalePlural)
+        {
+            Male = female != null;
+            Female = female;
+            FemalePlural = femalePlural;
+        }
     }
 }
