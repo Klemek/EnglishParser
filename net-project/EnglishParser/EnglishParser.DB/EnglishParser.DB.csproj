@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EnglishParser.Model\EnglishParser.Model.csproj" />
       <ProjectReference Include="..\EnglishParser.Utils\EnglishParser.Utils.csproj" />
     </ItemGroup>
 

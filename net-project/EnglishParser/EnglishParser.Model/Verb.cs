@@ -1,6 +1,6 @@
 using System;
 
-namespace EnglishParser.DB.Model
+namespace EnglishParser.Model
 {
     public class Verb : WordObject
     {

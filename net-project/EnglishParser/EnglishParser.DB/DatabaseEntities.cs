@@ -1,4 +1,5 @@
-using EnglishParser.DB.Model;
+
+using EnglishParser.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnglishParser.DB

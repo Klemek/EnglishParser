@@ -1,7 +1,6 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace EnglishParser.DB.Model
+namespace EnglishParser.Model
 {
     public class Word
     {

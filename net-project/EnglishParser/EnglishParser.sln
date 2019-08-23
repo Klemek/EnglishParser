@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.DB", "English
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.DB.Tests", "EnglishParser.DB.Tests\EnglishParser.DB.Tests.csproj", "{9131ABCA-692C-4D8D-996B-266D362548CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnglishParser.Model", "EnglishParser.Model\EnglishParser.Model.csproj", "{D401840B-7453-4F84-931E-061A0B378F50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{9131ABCA-692C-4D8D-996B-266D362548CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9131ABCA-692C-4D8D-996B-266D362548CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9131ABCA-692C-4D8D-996B-266D362548CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D401840B-7453-4F84-931E-061A0B378F50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D401840B-7453-4F84-931E-061A0B378F50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D401840B-7453-4F84-931E-061A0B378F50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D401840B-7453-4F84-931E-061A0B378F50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
