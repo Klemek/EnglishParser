@@ -4,16 +4,25 @@ namespace EnglishParser.Model
 {
     public class Word
     {
+        public enum WordType
+        {
+            Undef = -1,
+            Noun = 0,
+            Verb = 1,
+            Adjective = 2,
+            Adverb = 3
+        }
+        
         public Word()
         {
         }
 
-        public Word(int synSetId, int wordNumber, string text, int type)
+        public Word(string text, int type, int synSetId, int wordNumber)
         {
             SynSetId = synSetId;
             WordNumber = wordNumber;
             Text = text ?? throw new ArgumentNullException(nameof(text));
-            Type = type;
+            Type = type >= 0 ? type : throw new ArgumentNullException(nameof(type));
         }
         
         public int SynSetId { get; set; }

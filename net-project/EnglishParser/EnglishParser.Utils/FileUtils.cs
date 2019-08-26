@@ -18,9 +18,9 @@ namespace EnglishParser.Utils
         
         public static string ReadResource(Assembly assembly, string filePath)
         {
-            var resourceName = GetResourceName(assembly, filePath);
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            using (var reader =
+            string resourceName = GetResourceName(assembly, filePath);
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader =
                 new StreamReader(
                     stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
             {
