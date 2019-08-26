@@ -23,7 +23,13 @@ namespace EnglishParser.Utils
             return word1.EndsWith(word2);
         } 
         
-        
+        public static bool PartOf(string word1, string word2, char separator)
+        {
+            int i = word1.LastIndexOf(separator);
+            if (i < 0)
+                return false;
+            return word1.Substring(i + 1).Equals(word2);
+        } 
         
         #region Vowels and Consonants
 

@@ -15,7 +15,7 @@ namespace EnglishParser.Utils
             return GetTimeSpan(Now() - t0);
         }
 
-        public static string GetTimeSpan(long ms)
+        public static string GetTimeSpan(long ms, bool showMs=true)
         {
             long s = ms / 1000;
             ms %= 1000;
@@ -31,16 +31,24 @@ namespace EnglishParser.Utils
                 return $"{h.ToString()} h {StringUtils.PadLeft(m.ToString(), "0", 2)} m";
             if (m > 0)
                 return $"{m.ToString()} m {StringUtils.PadLeft(s.ToString(), "0", 2)} s";
-            if (s > 0)
-                return $"{s.ToString()} s {StringUtils.PadLeft(ms.ToString(), "0", 3)} ms";
-            if (ms > 0)
-                return $"{ms.ToString()} ms";
+            if (!showMs)
+            {
+                if (s > 0)
+                    return $"{s.ToString()} s";
+            }
+            else
+            {
+                if (s > 0)
+                    return $"{s.ToString()} s {StringUtils.PadLeft(ms.ToString(), "0", 3)} ms";
+                if (ms > 0)
+                    return $"{ms.ToString()} ms";
+            }
             return "no time";
         }
 
         #region ETA
 
-        public static string GetETA(List<long> timestamps, float step, float total)
+        public static string GetEta(List<long> timestamps, float step, float total)
         {
             long t0 = timestamps[0];
             int length = timestamps.Count;
@@ -61,15 +69,17 @@ namespace EnglishParser.Utils
                     sum += ComputeDelta(t0, p1, t1, p2, t2, total);
                 }
 
-                delta = sum / length;
+                delta = sum / (length - 1);
             }
 
-            return GetTimeSpan((long) ComputeETA(t0, current, total, delta));
+            return GetTimeSpan((long) ComputeEta(t0, t2, current, total, delta), false);
         }
 
-        private static float ComputeETA(long t0, float processed, float total, float delta)
+        private static float ComputeEta(long t0, long now, float processed, float total, float delta)
         {
-            return (long) ((total - processed) * ((Now() - t0) / processed) + delta);
+            processed /= total;
+            total = 1;
+            return (total - processed) * ((now - t0) / processed + delta);
         }
 
         private static float ComputeDelta(long t0, float processed1, long t1, float processed2, long t2, float total)

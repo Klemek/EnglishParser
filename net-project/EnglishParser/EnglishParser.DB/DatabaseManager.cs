@@ -35,7 +35,8 @@ namespace EnglishParser.DB
                 Port = (uint) _config.GetInt("Port"),
                 Database = _config.GetString("Database"),
                 UserID = admin ? _config.GetString("SuperUser") : _config.GetString("User"),
-                Password = admin ? _config.GetString("SuperPassword") : _config.GetString("Password")
+                Password = admin ? _config.GetString("SuperPassword") : _config.GetString("Password"),
+                AllowUserVariables = true
             };
             return builder.ConnectionString;
         }
@@ -51,12 +52,22 @@ namespace EnglishParser.DB
             long t0 = TimeUtils.Now();
             _config = config;
             if (_verbose)
-                Console.Error.WriteLine("Connecting successful with DB user \"{0}\"...", _config.GetString("User"));
-            Connect();
+                Console.Error.WriteLine("\tConnecting with DB user \"{0}\"...", _config.GetString("User"));
+            using (Connect())
+            {
+                
+            }
             if (_verbose)
-                Console.Error.WriteLine("Connecting successful with DB super user \"{0}\"...",
+                Console.Error.WriteLine("\tConnecting with DB super user \"{0}\"...",
                     _config.GetString("SuperUser"));
-            Connect(true);
+            using (MySqlConnection conn = Connect(true))
+            {
+                QuerySql(conn, "SHOW VARIABLES WHERE variable_name = 'max_allowed_packet'", reader =>
+                {
+                    reader.Read();
+                    _maxAllowedPacket = Convert.ToInt32(reader["value"]);
+                });
+            }
             DbContext = new DatabaseEntities(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
@@ -123,11 +134,7 @@ namespace EnglishParser.DB
 
             try
             {
-                ImportSql(conn, filePath);
-                if (version > 0)
-                    ExecSql(conn, "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1",
-                        ("@version", version));
-
+                ImportSql(conn, filePath, transaction);
                 transaction.Commit();
             }
             catch (MySqlException)
@@ -135,6 +142,10 @@ namespace EnglishParser.DB
                 transaction.Rollback();
                 throw;
             }
+            
+            if (version > 0)
+                ExecSql(conn, "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1",
+                    ("@version", version));
 
             List<string> endTables = ListTables(conn);
 
@@ -189,24 +200,18 @@ namespace EnglishParser.DB
             }
         }
 
-        public static void ImportSql(MySqlConnection conn, string resourceName)
+        public static void ImportSql(MySqlConnection conn, string resourceName, MySqlTransaction transaction=null)
         {
-            ImportSql(Assembly.GetCallingAssembly(), conn, resourceName);
+            ImportSql(Assembly.GetCallingAssembly(), conn, resourceName, transaction);
         }
 
-        public static void ImportSql(Assembly assembly, MySqlConnection conn, string filePath)
+        public static void ImportSql(Assembly assembly, MySqlConnection conn, string filePath, MySqlTransaction transaction=null)
         {
-            ImportSqlData(conn, FileUtils.ReadResource(assembly, filePath));
+            ImportSqlData(conn, FileUtils.ReadResource(assembly, filePath), transaction);
         }
 
-        private static void ImportSqlData(MySqlConnection conn, string data)
+        private static void ImportSqlData(MySqlConnection conn, string data, MySqlTransaction transaction=null)
         {
-            if (_maxAllowedPacket == -1)
-                QuerySql(conn, "SHOW VARIABLES WHERE variable_name = 'max_allowed_packet'", reader =>
-                {
-                    reader.Read();
-                    _maxAllowedPacket = reader.GetInt32("value");
-                });
             while (data.Length > _maxAllowedPacket)
             {
                 int split = data.Substring(0, _maxAllowedPacket).LastIndexOf(";", StringComparison.Ordinal);
@@ -218,7 +223,7 @@ namespace EnglishParser.DB
             foreach (Match match in rx.Matches(data).Reverse())
                 data = data.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
                        data.Substring(match.Groups[1].Index + match.Groups[1].Length);
-            using (MySqlCommand cmd = new MySqlCommand(data, conn))
+            using (MySqlCommand cmd = new MySqlCommand(data, conn, transaction))
                 cmd.ExecuteNonQuery();
         }
 

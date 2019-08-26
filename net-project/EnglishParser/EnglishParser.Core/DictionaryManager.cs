@@ -4,6 +4,7 @@ using System.Linq;
 using EnglishParser.DB;
 using EnglishParser.Model;
 using EnglishParser.Utils;
+using Microsoft.EntityFrameworkCore.Internal;
 using MySql.Data.MySqlClient;
 using Nini.Config;
 
@@ -22,6 +23,8 @@ namespace EnglishParser.Core
         private static Dictionary<int, int> _synSetMapping;
         private static int _autoInc;
 
+        private static DatabaseEntities DbContext => DatabaseManager.DbContext;
+
         public static bool Initialized { get; private set; }
 
         public static void Init(IConfig config)
@@ -39,74 +42,99 @@ namespace EnglishParser.Core
                 long t1;
                 using (MySqlConnection conn = DatabaseManager.Connect(true))
                 {
+                    if (_verbose)
+                        Console.Out.Write("\tEmptying dictionary...");
                     t1 = TimeUtils.Now();
                     EmptyDictionary(conn);
-                    if (_verbose) Console.Out.WriteLine("\tEmptied dictionary in {0}", TimeUtils.GetTimeSpent(t1));
+                    if (_verbose) Console.Out.WriteLine("\r\tEmptied dictionary in {0}", TimeUtils.GetTimeSpent(t1));
 
                     if (config.GetBoolean("PreComputed"))
                     {
-                        if (_verbose) Console.Out.WriteLine("\tImporting pre-computed data...");
+                        if (_verbose) Console.Out.Write("\tImporting pre-computed data...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/ep_fill.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\tImported pre-computed data in {0}", TimeUtils.GetTimeSpent(t1));
+                            Console.Out.WriteLine("\r\tImported pre-computed data in {0}", TimeUtils.GetTimeSpent(t1));
                     }
                     else
                     {
+                        if (_verbose)
+                            Console.Out.Write("\tLoading irregular plurals...");
                         t1 = TimeUtils.Now();
                         LoadIrregularPlurals();
                         if (_verbose)
-                            Console.Out.WriteLine("\tLoaded {0} irregular plurals in {1}", _irregularPlurals.Count,
+                            Console.Out.WriteLine("\r\tLoaded {0} irregular plurals in {1}", _irregularPlurals.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tLoading irregular third persons...");
                         t1 = TimeUtils.Now();
                         LoadIrregularThirdPersons();
                         if (_verbose)
-                            Console.Out.WriteLine("\tLoaded {0} irregular third persons in {1}",
+                            Console.Out.WriteLine("\r\tLoaded {0} irregular third persons in {1}",
                                 _irregularThirdPersons.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tLoading irregular verbs...");
                         t1 = TimeUtils.Now();
                         LoadIrregularVerbs();
                         if (_verbose)
-                            Console.Out.WriteLine("\tLoaded {0} irregular verbs in {1}", _irregularVerbs.Count,
+                            Console.Out.WriteLine("\r\tLoaded {0} irregular verbs in {1}", _irregularVerbs.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tLoading irregular adverbs...");
                         t1 = TimeUtils.Now();
                         LoadIrregularAdverbs();
                         if (_verbose)
-                            Console.Out.WriteLine("\tLoaded {0} irregular adverbs in {1}", _irregularAdverbs.Count,
+                            Console.Out.WriteLine("\r\tLoaded {0} irregular adverbs in {1}", _irregularAdverbs.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tLoading gender nouns...");
                         t1 = TimeUtils.Now();
                         LoadGenderNouns();
                         if (_verbose)
-                            Console.Out.WriteLine("\tLoaded {0} gender nouns in {1}", _genderNouns.Count,
+                            Console.Out.WriteLine("\r\tLoaded {0} gender nouns in {1}", _genderNouns.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tImporting wordnet structure...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/wordnet_init.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\tImported wordnet structure in {0}", TimeUtils.GetTimeSpent(t1));
+                            Console.Out.WriteLine("\r\tImported wordnet structure in {0}", TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.WriteLine("\tImporting wordnet data...");
+                            Console.Out.Write("\tImporting wordnet data...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/wordnet_fill.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\tImported wordnet data in {0}", TimeUtils.GetTimeSpent(t1));
+                            Console.Out.WriteLine("\r\tImported wordnet data in {0}", TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.WriteLine("\tComputing words");
+                            Console.Out.Write("\tComputing words...");
                         t1 = TimeUtils.Now();
                         int count = ComputeWords(conn);
                         if (_verbose)
-                            Console.Out.WriteLine("\tComputed {0} words in {1}", count, TimeUtils.GetTimeSpent(t1));
+                            Console.Out.WriteLine("\r\tComputed {0} words in {1}                 ", count,
+                                TimeUtils.GetTimeSpent(t1));
 
+                        if (_verbose)
+                            Console.Out.Write("\tComputing definitions...");
+                        t1 = TimeUtils.Now();
+                        count = ComputeDefinitions(conn);
+                        if (_verbose)
+                            Console.Out.WriteLine("\r\tComputed {0} definitions in {1}                ", count,
+                                TimeUtils.GetTimeSpent(t1));
+
+                        if (_verbose)
+                            Console.Out.Write("\tDropping wordnet structure...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/wordnet_drop.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\tDropped wordnet structure and data in {0}",
+                            Console.Out.WriteLine("\r\tDropped wordnet structure and data in {0}",
                                 TimeUtils.GetTimeSpent(t1));
                     }
 
@@ -117,11 +145,11 @@ namespace EnglishParser.Core
                 if (_verbose)
                 {
                     Console.Out.WriteLine("Dictionary initialized in {0}", TimeUtils.GetTimeSpent(t0));
-                    Console.Out.WriteLine("\t+ {0} Words", DatabaseManager.DbContext.Words.Count());
-                    Console.Out.WriteLine("\t+ {0} Definitions", DatabaseManager.DbContext.Definitions.Count());
-                    Console.Out.WriteLine("\t+ {0} Nouns", DatabaseManager.DbContext.Nouns.Count());
-                    Console.Out.WriteLine("\t+ {0} Verbs", DatabaseManager.DbContext.Verbs.Count());
-                    Console.Out.WriteLine("\t+ {0} Adjectives", DatabaseManager.DbContext.Adjectives.Count());
+                    Console.Out.WriteLine("\t+ {0} Words", DbContext.Words.Count());
+                    Console.Out.WriteLine("\t+ {0} Definitions", DbContext.Definitions.Count());
+                    Console.Out.WriteLine("\t+ {0} Nouns", DbContext.Nouns.Count());
+                    Console.Out.WriteLine("\t+ {0} Verbs", DbContext.Verbs.Count());
+                    Console.Out.WriteLine("\t+ {0} Adjectives", DbContext.Adjectives.Count());
                 }
             }
         }
@@ -142,10 +170,10 @@ namespace EnglishParser.Core
                 if (!_irregularPlurals.ContainsKey(data[i, 0]))
                 {
                     _irregularPlurals.Add(data[i, 0], data[i, 1]);
-                    DatabaseManager.DbContext.Add(new Noun(data[i, 0], data[i, 1]));
+                    DbContext.Add(new Noun(data[i, 0], data[i, 1]));
                 }
 
-            DatabaseManager.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         private static void LoadIrregularThirdPersons()
@@ -158,7 +186,7 @@ namespace EnglishParser.Core
                     _irregularThirdPersons.Add(data[i, 0], data[i, 1]);
                 }
 
-            DatabaseManager.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         private static void LoadIrregularVerbs()
@@ -183,13 +211,13 @@ namespace EnglishParser.Core
                     root = i < line[0].Length ? line[0][i] : line[0][0];
                     pt = i < line[1].Length ? line[1][i] : line[1][0];
                     pp = i < line[2].Length ? line[2][i] : line[2][0];
-                    DatabaseManager.DbContext.Add(new Verb(root, pt, pp,
+                    DbContext.Add(new Verb(root, pt, pp,
                         pp.Length == 0 ? "" : EnglishUtils.GetPresentParticiple(root),
                         GetThirdPerson(root)));
                 }
             }
 
-            DatabaseManager.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         private static void LoadIrregularAdverbs()
@@ -200,10 +228,10 @@ namespace EnglishParser.Core
                 if (!_irregularAdverbs.ContainsKey(data[i, 0]))
                 {
                     _irregularAdverbs.Add(data[i, 0], data[i, 1]);
-                    DatabaseManager.DbContext.Add(new Adjective(data[i, 0], data[i, 1]));
+                    DbContext.Add(new Adjective(data[i, 0], data[i, 1]));
                 }
 
-            DatabaseManager.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
 
@@ -214,24 +242,22 @@ namespace EnglishParser.Core
             for (int i = 0; i < data.GetLength(0); i++)
             {
                 _genderNouns.Add(data[i, 0], data[i, 1]);
-                Noun nm = DatabaseManager.DbContext.Nouns.FirstOrDefault(n =>
-                    n.Base == data[i, 0] || n.Plural == data[i, 0]);
+                Noun nm = DbContext.GetNoun(data[i, 0]);
                 if (nm == null)
                 {
                     nm = new Noun(data[i, 0], GetNounPlural(data[i, 0]));
-                    DatabaseManager.DbContext.Add(nm);
-                    DatabaseManager.DbContext.SaveChanges();
+                    DbContext.Add(nm);
+                    DbContext.SaveChanges();
                 }
 
-                Noun nf = DatabaseManager.DbContext.Nouns.FirstOrDefault(n =>
-                    n.Base == data[i, 1] || n.Plural == data[i, 1]);
+                Noun nf = DbContext.GetNoun(data[i, 1]);
                 if (nf != null)
-                    DatabaseManager.DbContext.Remove(nf);
+                    DbContext.Remove(nf);
                 nm.SetFemale(data[i, 1], GetNounPlural(data[i, 1]));
-                DatabaseManager.DbContext.Update(nm);
+                DbContext.Update(nm);
             }
 
-            DatabaseManager.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         #endregion
@@ -290,71 +316,173 @@ namespace EnglishParser.Core
         {
             int row = 0;
             int rowCount = DatabaseManager.QuerySqlInt(conn, "SELECT COUNT(*) FROM wn_synset");
-            int rowStep = rowCount / 20; // 5%
+            int rowStep = rowCount / 100; // 1%
 
             string word;
             string type;
             int synSetId;
             int wNum;
 
-            List<long> ts = new List<long>()
+            List<Noun> nounBuffer = new List<Noun>();
+            List<Verb> verbBuffer = new List<Verb>();
+            List<Adjective> adjectiveBuffer = new List<Adjective>();
+
+            List<long> ts = new List<long>
             {
                 TimeUtils.Now()
             };
 
-            DatabaseManager.QuerySql(conn, "SELECT * FROM wn_synset WHERE 1", reader =>
+            while (row < rowCount)
             {
-                while (reader.Read())
+                nounBuffer.Clear();
+                verbBuffer.Clear();
+                adjectiveBuffer.Clear();
+                DatabaseManager.QuerySql(conn, "SELECT * FROM wn_synset LIMIT @rowStep OFFSET @row", reader =>
                 {
-                    word = reader.GetString("word");
-                    type = reader.GetString("ss_type");
-                    synSetId = reader.GetInt32("synset_id");
-                    wNum = reader.GetInt32("w_num");
-
-                    Word.WordType wordType = Word.WordType.Undef;
-
-                    if (word.Contains("_"))
-                        continue;
-
-                    word = word.Split("\\(")[0];
-                    switch (type)
+                    while (reader.Read())
                     {
-                        case "n":
-                            wordType = Word.WordType.Noun;
+                        row++;
 
-                            //TODO compute noun
-                            break;
-                        case "v":
-                            wordType = Word.WordType.Verb;
-                            //TODO compute verb
-                            break;
-                        case "a":
-                        case "s":
-                            wordType = Word.WordType.Adjective;
-                            //TODO compute adjective
-                            break;
-                        case "r":
-                            wordType = Word.WordType.Adverb;
-                            //TODO compute adverb
-                            break;
-                        default:
+                        word = reader.GetString("word");
+                        type = reader.GetString("ss_type");
+                        synSetId = reader.GetInt32("synset_id");
+                        wNum = reader.GetInt32("w_num");
+
+                        Word.WordType wordType = Word.WordType.Undef;
+
+                        if (word.Contains("_") || word == null)
                             continue;
+
+                        word = word.Split("\\(")[0];
+                        switch (type)
+                        {
+                            case "n":
+                                wordType = Word.WordType.Noun;
+                                string word1 = word;
+                                if (nounBuffer.All(w => w.Base != word1) && !DbContext.NounExists(word) &&
+                                    !DbContext.FemaleNounExists(word))
+                                    nounBuffer.AddIfNotNull(ComputeNewNoun(word));
+                                break;
+                            case "v":
+                                string word2 = word;
+                                if (verbBuffer.All(w => w.Base != word2) && !DbContext.VerbExists(word))
+                                    verbBuffer.Add(ComputeNewVerb(word));
+                                break;
+                            case "a":
+                            case "s":
+                                wordType = Word.WordType.Adjective;
+                                string word3 = word;
+                                if (adjectiveBuffer.All(w => w.Base != word3) && !DbContext.AdjectiveExists(word))
+                                    adjectiveBuffer.Add(ComputeNewAdjective(word));
+                                break;
+                            case "r":
+                                wordType = Word.WordType.Adverb;
+                                break;
+                            default:
+                                continue;
+                        }
+
+                        DbContext.Add(new Word(word, (int) wordType, GetSynSetId(synSetId), wNum));
                     }
+                }, ("@rowstep", rowStep), ("@row", row));
+                DbContext.AddRange(nounBuffer);
+                DbContext.AddRange(verbBuffer);
+                DbContext.AddRange(adjectiveBuffer);
+                DbContext.SaveChanges();
+                Console.Out.Write("\r\tComputed {0}/{1} words ({2}%) (ETA {3})         ", row, rowCount,
+                    Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
+            }
 
-                    DatabaseManager.DbContext.Add(new Word(word, (int) wordType, GetSynSetId(synSetId), wNum));
+            return row;
+        }
 
-                    if (row++ > 0 && row % rowStep == 0)
+        private static Noun ComputeNewNoun(string word)
+        {
+            foreach (KeyValuePair<string, string> gn in _genderNouns)
+            {
+                if (word.EndsWith(gn.Key))
+                {
+                    string prefix = word.Substring(0, word.LastIndexOf(gn.Key, StringComparison.Ordinal));
+                    return new Noun(word, GetNounPlural(word),
+                        prefix + gn.Value, prefix + GetNounPlural(gn.Value));
+                }
+
+                if (word.EndsWith(gn.Value))
+                {
+                    string prefix = word.Substring(0, word.LastIndexOf(gn.Value, StringComparison.Ordinal));
+                    if (!DbContext.NounExists(prefix + gn.Key))
+                        return null;
+                    return new Noun(prefix + gn.Key, prefix + GetNounPlural(gn.Key),
+                        word, GetNounPlural(word));
+                }
+            }
+
+            return new Noun(word, GetNounPlural(word));
+        }
+
+        private static Verb ComputeNewVerb(string word)
+        {
+            string pastTense = null;
+            string pastPart = null;
+            string presPart = EnglishUtils.GetPresentParticiple(word);
+            string thirdPers = GetThirdPerson(word);
+
+            foreach (KeyValuePair<string, string[]> irregular in _irregularVerbs)
+                if (StringUtils.PartOf(word, irregular.Key, '-'))
+                {
+                    string[] pasts = irregular.Value;
+                    if (pasts[1].Length > 0)
                     {
-                        DatabaseManager.DbContext.SaveChanges();
-                        Console.Out.WriteLine("\t\tComputed {0}/{1} words ({2}%) (ETA {3})", row, rowCount,
-                            Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetETA(ts, rowStep, rowCount));
+                        string prefix = word.Substring(0, word.LastIndexOf(irregular.Key, StringComparison.Ordinal));
+                        pastTense = prefix + pasts[0];
+                        pastPart = prefix + pasts[1];
+                        break;
                     }
                 }
-            });
 
-            //TODO definitions
+            if (pastTense == null)
+            {
+                pastTense = EnglishUtils.GetRegularPast(word);
+                pastPart = EnglishUtils.GetRegularPast(word);
+            }
 
-            DatabaseManager.DbContext.SaveChanges();
+            return new Verb(word, pastTense, pastPart, presPart, thirdPers);
+        }
+
+        private static Adjective ComputeNewAdjective(string word)
+        {
+            return new Adjective(word, GetAdverb(word));
+        }
+
+        private static int ComputeDefinitions(MySqlConnection conn)
+        {
+            int row = 0;
+            int rowCount = DatabaseManager.QuerySqlInt(conn, "SELECT COUNT(*) FROM wn_gloss");
+            int rowStep = rowCount / 20; // 5%
+            string gloss;
+            int synSetId;
+            List<long> ts = new List<long>
+            {
+                TimeUtils.Now()
+            };
+            while (row < rowCount)
+            {
+                DatabaseManager.QuerySql(conn, "SELECT * FROM wn_gloss LIMIT @rowstep OFFSET @row", reader =>
+                {
+                    while (reader.Read())
+                    {
+                        row++;
+
+                        gloss = reader.GetString("gloss");
+                        synSetId = reader.GetInt32("synset_id");
+                        if (_synSetMapping.ContainsKey(synSetId))
+                            DbContext.Add(new Definition(GetSynSetId(synSetId), gloss));
+                    }
+                }, ("@rowstep", rowStep), ("@row", row));
+                DbContext.SaveChanges();
+                Console.Out.Write("\r\tComputed {0}/{1} definitions ({2}%) (ETA {3})         ", row, rowCount,
+                    Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
+            }
 
             return row;
         }
