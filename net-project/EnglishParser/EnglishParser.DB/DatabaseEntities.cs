@@ -41,7 +41,8 @@ namespace EnglishParser.DB
                     .HasColumnName("type")
                     .IsRequired();
                 entity.Property(e => e.SynSetId)
-                    .HasColumnName("syn_set_id");
+                    .HasColumnName("syn_set_id")
+                    .IsRequired();
                 entity.Property(e => e.WordNumber)
                     .HasColumnName("word_num");
                 entity.HasKey(e => new {e.SynSetId, e.WordNumber});

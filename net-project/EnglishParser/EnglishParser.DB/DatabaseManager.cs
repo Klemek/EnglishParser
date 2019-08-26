@@ -22,14 +22,14 @@ namespace EnglishParser.DB
 
         public static MySqlConnection Connect(bool admin = false)
         {
-            var conn = new MySqlConnection(BuildConnectionString(admin));
+            MySqlConnection conn = new MySqlConnection(BuildConnectionString(admin));
             conn.Open();
             return conn;
         }
 
         private static string BuildConnectionString(bool admin = false)
         {
-            var builder = new MySqlConnectionStringBuilder
+            MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
             {
                 Server = _config.GetString("Host"),
                 Port = (uint) _config.GetInt("Port"),
@@ -48,7 +48,7 @@ namespace EnglishParser.DB
         {
             _verbose = config.GetBoolean("Verbose");
             if (_verbose) Console.Out.WriteLine("Initializing database...");
-            var t0 = TimeUtils.Now();
+            long t0 = TimeUtils.Now();
             _config = config;
             if (_verbose)
                 Console.Error.WriteLine("Connecting successful with DB user \"{0}\"...", _config.GetString("User"));
@@ -65,12 +65,12 @@ namespace EnglishParser.DB
 
         public static void UpgradeDatabase()
         {
-            var version = _config.GetInt("Version");
-            var currentVersion = -1;
+            int version = _config.GetInt("Version");
+            int currentVersion = -1;
 
-            var t0 = TimeUtils.Now();
+            long t0 = TimeUtils.Now();
 
-            using (var conn = Connect(true))
+            using (MySqlConnection conn = Connect(true))
             {
                 if (!TableExists(conn, "db_info"))
                 {
@@ -88,7 +88,7 @@ namespace EnglishParser.DB
                         {
                             reader.Read();
                             currentVersion = reader.GetInt16("version");
-                            var lastUpdate = reader.GetDateTime("update_date");
+                            DateTime lastUpdate = reader.GetDateTime("update_date");
                             DictInitialized = reader.GetInt16("dict_init") == 1;
                             if (_verbose)
                                 Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
@@ -117,9 +117,9 @@ namespace EnglishParser.DB
                 filePath = $"sql/v{version}.sql";
             }
 
-            var startTables = ListTables(conn);
+            List<string> startTables = ListTables(conn);
 
-            var transaction = conn.BeginTransaction();
+            MySqlTransaction transaction = conn.BeginTransaction();
 
             try
             {
@@ -136,13 +136,13 @@ namespace EnglishParser.DB
                 throw;
             }
 
-            var endTables = ListTables(conn);
+            List<string> endTables = ListTables(conn);
 
             if (_verbose)
             {
-                foreach (var table in startTables.Where(t => !endTables.Contains(t)))
+                foreach (string table in startTables.Where(t => !endTables.Contains(t)))
                     Console.Out.WriteLine("\t\t(-) table {0}", table);
-                foreach (var table in endTables.Where(t => !startTables.Contains(t)))
+                foreach (string table in endTables.Where(t => !startTables.Contains(t)))
                     Console.Out.WriteLine("\t\t(+) table {0}", table);
             }
         }
@@ -153,9 +153,9 @@ namespace EnglishParser.DB
 
         public static void ExecSql(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
         {
-            using (var cmd = new MySqlCommand(command, conn))
+            using (MySqlCommand cmd = new MySqlCommand(command, conn))
             {
-                foreach (var param in args)
+                foreach ((string, object) param in args)
                     cmd.Parameters.AddWithValue(param.Item1, param.Item2);
                 cmd.ExecuteNonQuery();
             }
@@ -164,13 +164,27 @@ namespace EnglishParser.DB
         public static void QuerySql(MySqlConnection conn, string command,
             Action<MySqlDataReader> action, params ValueTuple<string, object>[] args)
         {
-            using (var cmd = new MySqlCommand(command, conn))
+            using (MySqlCommand cmd = new MySqlCommand(command, conn))
             {
-                foreach (var param in args)
+                foreach ((string, object) param in args)
                     cmd.Parameters.AddWithValue(param.Item1, param.Item2);
-                using (var reader = cmd.ExecuteReader())
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     action(reader);
+                }
+            }
+        }
+        
+        public static int QuerySqlInt(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
+        {
+            using (MySqlCommand cmd = new MySqlCommand(command, conn))
+            {
+                foreach ((string, object) param in args)
+                    cmd.Parameters.AddWithValue(param.Item1, param.Item2);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    return reader.GetInt32(0);
                 }
             }
         }
@@ -200,11 +214,11 @@ namespace EnglishParser.DB
                 data = data.Substring(split + 1);
             }
             data = data.Replace("\n", "").Replace("\r", "");
-            var rx = new Regex(@"@(\w+)");
+            Regex rx = new Regex(@"@(\w+)");
             foreach (Match match in rx.Matches(data).Reverse())
                 data = data.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
                        data.Substring(match.Groups[1].Index + match.Groups[1].Length);
-            using (var cmd = new MySqlCommand(data, conn))
+            using (MySqlCommand cmd = new MySqlCommand(data, conn))
                 cmd.ExecuteNonQuery();
         }
 
@@ -214,14 +228,14 @@ namespace EnglishParser.DB
 
         public static bool TableExists(MySqlConnection conn, string name)
         {
-            var exists = false;
+            bool exists = false;
             QuerySql(conn, "SHOW TABLES LIKE @name", reader => { exists = reader.HasRows; }, ("@name", name));
             return exists;
         }
 
         public static List<string> ListTables(MySqlConnection conn)
         {
-            var tables = new List<string>();
+            List<string> tables = new List<string>();
             QuerySql(conn, "SHOW TABLES", reader =>
             {
                 while (reader.Read())

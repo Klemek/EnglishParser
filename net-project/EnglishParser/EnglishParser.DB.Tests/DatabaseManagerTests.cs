@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Nini.Config;
 using NUnit.Framework;
@@ -38,7 +39,7 @@ namespace EnglishParser.DB.Tests
         [Test]
         public void ListTables()
         {
-            var tables = DatabaseManager.ListTables(_conn);
+            List<string> tables = DatabaseManager.ListTables(_conn);
             Assert.Contains("db_info", tables);
             Assert.Greater(tables.Count, 1);
             CleanDatabase();
