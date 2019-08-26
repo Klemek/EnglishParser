@@ -4,3 +4,22 @@
 # EnglishParser
 
 WIP
+
+```ini
+; EnglishParser.ini
+
+[Database]
+Version = 1
+Host = localhost
+Port = 3306
+Database = english_parser
+User = ep-user
+Password = ...
+SuperUser = ep-admin
+SuperPassword = ...
+Verbose = true
+
+[Dictionary]
+Verbose = true
+PreComputed = false
+```

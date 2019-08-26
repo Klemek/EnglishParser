@@ -17,17 +17,22 @@ namespace EnglishParser.Model
         {
             SetFemale(female, femalePlural);
         }
-        
+
         public string Plural { get; set; }
-        public bool Male { get; set; }
         public string Female { get; set; }
         public string FemalePlural { get; set; }
-        
+
+        public bool Proper => Char.IsUpper(Base[0]);
+
         public void SetFemale(string female, string femalePlural)
         {
-            Male = female != null;
             Female = female;
             FemalePlural = femalePlural;
+        }
+
+        public override string ToString()
+        {
+            return $"{nameof(Base)}: {Base}, {nameof(Plural)}: {Plural}, {nameof(Female)}: {Female}, {nameof(FemalePlural)}: {FemalePlural}, {nameof(Proper)}: {Proper}";
         }
     }
 }

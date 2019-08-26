@@ -1,6 +1,7 @@
-
+using System.Linq;
 using EnglishParser.Model;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnglishParser.DB
 {
@@ -24,11 +25,13 @@ namespace EnglishParser.DB
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if(!optionsBuilder.IsConfigured)
-                optionsBuilder.UseMySQL(_connectionString);
+                optionsBuilder.UseMySql(_connectionString);
+            optionsBuilder.EnableSensitiveDataLogging();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Word>(entity =>
             {
                 entity.ToTable("dict_word");
@@ -75,10 +78,6 @@ namespace EnglishParser.DB
                     .IsRequired()
                     .HasMaxLength(MAX_WORD_LENGTH)
                     .IsUnicode(false);
-                entity.Property(e => e.Male)
-                    .HasColumnName("male")
-                    .HasColumnType("bit")
-                    .IsRequired();
                 entity.Property(e => e.Female)
                     .HasColumnName("female")
                     .HasMaxLength(MAX_WORD_LENGTH)
@@ -137,5 +136,34 @@ namespace EnglishParser.DB
                 entity.HasKey(e => new {e.Base, e.Adverb});
             });
         }
+        
+        #region Extensions
+
+        public Noun GetNoun(string word)
+        {
+            return Nouns.FirstOrDefault(n => n.Base == word || n.Plural == word);
+        }
+
+        public bool NounExists(string word)
+        {
+            return Nouns.Any(n => n.Base == word || n.Plural == word);
+        }
+        
+        public bool FemaleNounExists(string word)
+        {
+            return Nouns.Any(n => n.Female == word || n.FemalePlural == word);
+        }
+
+        public bool VerbExists(string word)
+        {
+            return Verbs.Any(v => v.Base == word);
+        }
+        
+        public bool AdjectiveExists(string word)
+        {
+            return Adjectives.Any(a => a.Base == word);
+        }
+        
+        #endregion
     }
 }

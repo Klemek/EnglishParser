@@ -1,7 +1,7 @@
 CREATE TABLE `db_info` (
                            `version`     SMALLINT  NOT NULL DEFAULT 0,
                            `update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-                           `dict_init`   SMALLINT  NOT NULL DEFAULT 0
+                           `dict_init`   BIT(1)    NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `dict_word` (
@@ -20,9 +20,8 @@ CREATE TABLE `dict_def` (
 );
 
 CREATE TABLE `dict_noun` (
-                             `base`          VARCHAR(255) NOT NULL,
-                             `plural`        VARCHAR(255) NOT NULL,
-                             `male`          BIT          NOT NULL,
+                             `base`          VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+                             `plural`        VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
                              `female`        VARCHAR(255),
                              `female_plural` VARCHAR(255),
                              PRIMARY KEY (`base`, `plural`)
@@ -32,17 +31,17 @@ CREATE INDEX `IDX_Noun1` ON `dict_noun`(`base`,`plural`);
 CREATE INDEX `IDX_Noun2` ON `dict_noun`(`female`);
 
 CREATE TABLE `dict_verb` (
-                             `base`       VARCHAR(255) NOT NULL,
-                             `past_tense` VARCHAR(255) NOT NULL,
-                             `past_part`  VARCHAR(255) NOT NULL,
+                             `base`       VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL,
+                             `past_tense` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL,
+                             `past_part`  VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL,
                              `pres_part`  VARCHAR(255) NOT NULL,
                              `third_pers` VARCHAR(255) NOT NULL,
                              PRIMARY KEY (`base`, `past_tense`, `past_part`)
 );
 
 CREATE TABLE `dict_adj` (
-                            `base`   VARCHAR(255) NOT NULL,
-                            `adverb` VARCHAR(255) NOT NULL,
+                            `base`   VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL,
+                            `adverb` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_bin  NOT NULL,
                             PRIMARY KEY (`base`, `adverb`)
 );
 

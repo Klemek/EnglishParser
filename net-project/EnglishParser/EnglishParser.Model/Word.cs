@@ -22,7 +22,7 @@ namespace EnglishParser.Model
             SynSetId = synSetId;
             WordNumber = wordNumber;
             Text = text ?? throw new ArgumentNullException(nameof(text));
-            Type = type >= 0 ? type : throw new ArgumentNullException(nameof(type));
+            Type = type;
         }
         
         public int SynSetId { get; set; }
