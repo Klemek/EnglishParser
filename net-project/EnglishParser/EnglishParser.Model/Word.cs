@@ -1,4 +1,5 @@
 using System;
+using EnglishParser.Utils;
 
 namespace EnglishParser.Model
 {
@@ -31,5 +32,10 @@ namespace EnglishParser.Model
         public int Type { get; set; }
         
         public Definition Definition { get; set; }
+        
+        public override string ToString()
+        {
+            return StringUtils.ToString(this);
+        }
     }
 }

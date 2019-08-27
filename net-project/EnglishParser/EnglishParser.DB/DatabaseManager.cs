@@ -55,8 +55,8 @@ namespace EnglishParser.DB
                 Console.Error.WriteLine("\tConnecting with DB user \"{0}\"...", _config.GetString("User"));
             using (Connect())
             {
-                
             }
+
             if (_verbose)
                 Console.Error.WriteLine("\tConnecting with DB super user \"{0}\"...",
                     _config.GetString("SuperUser"));
@@ -68,6 +68,7 @@ namespace EnglishParser.DB
                     _maxAllowedPacket = Convert.ToInt32(reader["value"]);
                 });
             }
+
             DbContext = new DatabaseEntities(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
@@ -142,7 +143,7 @@ namespace EnglishParser.DB
                 transaction.Rollback();
                 throw;
             }
-            
+
             if (version > 0)
                 ExecSql(conn, "UPDATE db_info SET update_date = CURRENT_TIMESTAMP(), version = @version WHERE 1",
                     ("@version", version));
@@ -162,13 +163,13 @@ namespace EnglishParser.DB
 
         #region SQLCommand
 
-        public static void ExecSql(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
+        public static int ExecSql(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
         {
             using (MySqlCommand cmd = new MySqlCommand(command, conn))
             {
                 foreach ((string, object) param in args)
                     cmd.Parameters.AddWithValue(param.Item1, param.Item2);
-                cmd.ExecuteNonQuery();
+                return cmd.ExecuteNonQuery();
             }
         }
 
@@ -180,12 +181,10 @@ namespace EnglishParser.DB
                 foreach ((string, object) param in args)
                     cmd.Parameters.AddWithValue(param.Item1, param.Item2);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
                     action(reader);
-                }
             }
         }
-        
+
         public static int QuerySqlInt(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
         {
             using (MySqlCommand cmd = new MySqlCommand(command, conn))
@@ -200,17 +199,18 @@ namespace EnglishParser.DB
             }
         }
 
-        public static void ImportSql(MySqlConnection conn, string resourceName, MySqlTransaction transaction=null)
+        public static void ImportSql(MySqlConnection conn, string resourceName, MySqlTransaction transaction = null)
         {
             ImportSql(Assembly.GetCallingAssembly(), conn, resourceName, transaction);
         }
 
-        public static void ImportSql(Assembly assembly, MySqlConnection conn, string filePath, MySqlTransaction transaction=null)
+        public static void ImportSql(Assembly assembly, MySqlConnection conn, string filePath,
+            MySqlTransaction transaction = null)
         {
             ImportSqlData(conn, FileUtils.ReadResource(assembly, filePath), transaction);
         }
 
-        private static void ImportSqlData(MySqlConnection conn, string data, MySqlTransaction transaction=null)
+        private static void ImportSqlData(MySqlConnection conn, string data, MySqlTransaction transaction = null)
         {
             while (data.Length > _maxAllowedPacket)
             {
@@ -218,6 +218,7 @@ namespace EnglishParser.DB
                 ImportSqlData(conn, data.Substring(0, split + 1));
                 data = data.Substring(split + 1);
             }
+
             data = data.Replace("\n", "").Replace("\r", "");
             Regex rx = new Regex(@"@(\w+)");
             foreach (Match match in rx.Matches(data).Reverse())

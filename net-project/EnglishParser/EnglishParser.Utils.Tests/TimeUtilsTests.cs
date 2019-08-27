@@ -4,11 +4,6 @@ namespace EnglishParser.Utils.Tests
 {
     public class TimeUtilsTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void GetTimeSpan()
         {

@@ -29,10 +29,5 @@ namespace EnglishParser.Model
             Female = female;
             FemalePlural = femalePlural;
         }
-
-        public override string ToString()
-        {
-            return $"{nameof(Base)}: {Base}, {nameof(Plural)}: {Plural}, {nameof(Female)}: {Female}, {nameof(FemalePlural)}: {FemalePlural}, {nameof(Proper)}: {Proper}";
-        }
     }
 }
