@@ -1,16 +1,15 @@
 dist: trusty
 language: csharp
 solution: EnglishParser.sln
+mono: none
+dotnet: 2.2.401
 services:
   - mysql
 before_install:
   - mysql -e 'CREATE DATABASE english_parser_test;'
 install:
-  - nuget restore EnglishParser.sln
-  - nuget install NUnit.Console -Version 3.9.0 -OutputDirectory testrunner
+  - dotnet restore
 before_script:
   - mv -f travis.ini EnglishParser.DB.Tests/TestDatabase.ini
 script:
-  - msbuild /p:Configuration=Release EnglishParser.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./EnglishParser.Utils.Tests/bin/Release/EnglishParser.Utils.Tests.dll
-  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./EnglishParser.DB.Tests/bin/Release/EnglishParser.DB.Tests.dll
+  - dotnet test
