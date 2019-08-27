@@ -2,7 +2,7 @@ dist: trusty
 language: csharp
 solution: EnglishParser.sln
 mono: none
-dotnet: 2.2.401
+dotnet: 2.2.502
 services:
   - mysql
 before_install:
