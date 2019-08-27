@@ -37,6 +37,8 @@ namespace EnglishParser.DB.Tests
             DatabaseManager.Init(_config);
         }
 
+        #region SqlCommand
+
         [Test]
         public void QuerySql()
         {
@@ -56,7 +58,8 @@ namespace EnglishParser.DB.Tests
         public void ExecSql()
         {
             int n1 = new Random().Next(10000);
-            int res = DatabaseManager.ExecSql(_conn, "DROP TABLE IF EXISTS hello; CREATE TABLE hello ( `key` INT NOT NULL DEFAULT @n1); INSERT INTO hello VALUES ();",
+            int res = DatabaseManager.ExecSql(_conn,
+                "DROP TABLE IF EXISTS hello; CREATE TABLE hello ( `key` INT NOT NULL DEFAULT @n1); INSERT INTO hello VALUES ();",
                 ("@n1", n1));
             Assert.IsTrue(DatabaseManager.TableExists(_conn, "hello"));
             Assert.AreEqual(1, res);
@@ -66,6 +69,10 @@ namespace EnglishParser.DB.Tests
                 Assert.AreEqual(n1, reader.GetInt32(0));
             });
         }
+
+        #endregion
+
+        #region Utils
 
         [Test]
         public void ListTables()
@@ -87,6 +94,10 @@ namespace EnglishParser.DB.Tests
             Assert.False(DatabaseManager.TableExists(_conn, "db_info"));
         }
 
+        #endregion
+
+        #region Init
+
         [Test]
         public void DictInitialized()
         {
@@ -97,7 +108,7 @@ namespace EnglishParser.DB.Tests
             DatabaseManager.Init(_config);
             Assert.IsTrue(DatabaseManager.DictInitialized);
         }
-        
+
         [Test]
         public void UpgradeDatabase()
         {
@@ -111,5 +122,7 @@ namespace EnglishParser.DB.Tests
                 Assert.AreEqual(_config.GetInt("Version"), reader.GetInt32("version"));
             });
         }
+
+        #endregion
     }
 }

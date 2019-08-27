@@ -13,7 +13,7 @@ namespace EnglishParser.Model
         {
             Adverb = adverb ?? throw new ArgumentNullException(nameof(adverb));
         }
-        
+
         public string Adverb { get; set; }
     }
 }

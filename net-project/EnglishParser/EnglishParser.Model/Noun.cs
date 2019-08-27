@@ -22,7 +22,7 @@ namespace EnglishParser.Model
         public string Female { get; set; }
         public string FemalePlural { get; set; }
 
-        public bool Proper => Char.IsUpper(Base[0]);
+        public bool Proper => char.IsUpper(Base[0]);
 
         public void SetFemale(string female, string femalePlural)
         {

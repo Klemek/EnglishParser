@@ -16,7 +16,7 @@ namespace EnglishParser.DB
         private static int _maxAllowedPacket = -1;
         public static bool Initialized { get; private set; }
         public static bool DictInitialized { get; private set; }
-        public static DatabaseEntities DbContext { get; private set; }
+        public static DbContext DbContext { get; private set; }
 
         #region Connect
 
@@ -69,7 +69,7 @@ namespace EnglishParser.DB
                 });
             }
 
-            DbContext = new DatabaseEntities(BuildConnectionString());
+            DbContext = new DbContext(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
             if (_verbose) Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
@@ -161,7 +161,7 @@ namespace EnglishParser.DB
 
         #endregion
 
-        #region SQLCommand
+        #region SqlCommand
 
         public static int ExecSql(MySqlConnection conn, string command, params ValueTuple<string, object>[] args)
         {
@@ -181,7 +181,9 @@ namespace EnglishParser.DB
                 foreach ((string, object) param in args)
                     cmd.Parameters.AddWithValue(param.Item1, param.Item2);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
                     action(reader);
+                }
             }
         }
 
@@ -225,7 +227,9 @@ namespace EnglishParser.DB
                 data = data.Substring(0, match.Groups[1].Index) + "`" + match.Groups[1].Value + "`" +
                        data.Substring(match.Groups[1].Index + match.Groups[1].Length);
             using (MySqlCommand cmd = new MySqlCommand(data, conn, transaction))
+            {
                 cmd.ExecuteNonQuery();
+            }
         }
 
         #endregion

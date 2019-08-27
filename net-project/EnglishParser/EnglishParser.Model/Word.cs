@@ -13,7 +13,7 @@ namespace EnglishParser.Model
             Adjective = 2,
             Adverb = 3
         }
-        
+
         public Word()
         {
         }
@@ -25,14 +25,14 @@ namespace EnglishParser.Model
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Type = type;
         }
-        
+
         public int SynSetId { get; set; }
         public int WordNumber { get; set; }
         public string Text { get; set; }
         public int Type { get; set; }
-        
+
         public Definition Definition { get; set; }
-        
+
         public override string ToString()
         {
             return StringUtils.ToString(this);

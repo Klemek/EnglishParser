@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using EnglishParser.DB;
 using Nini.Config;
 
