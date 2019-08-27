@@ -4,7 +4,6 @@ using System.Linq;
 using EnglishParser.DB;
 using EnglishParser.Model;
 using EnglishParser.Utils;
-using Microsoft.EntityFrameworkCore.Internal;
 using MySql.Data.MySqlClient;
 using Nini.Config;
 
@@ -23,7 +22,7 @@ namespace EnglishParser.Core
         private static Dictionary<int, int> _synSetMapping;
         private static int _autoInc;
 
-        private static DatabaseEntities DbContext => DatabaseManager.DbContext;
+        private static DbContext DbContext => DatabaseManager.DbContext;
 
         public static bool Initialized { get; private set; }
 
@@ -34,7 +33,7 @@ namespace EnglishParser.Core
             if (!DatabaseManager.Initialized)
                 throw new Exception("Database is not initialized");
             Initialized = DatabaseManager.DictInitialized;
-            if (_verbose) Console.Out.WriteLine("Dictionary {0}initialized", Initialized ? "" : "not ");
+            if (_verbose) Console.Out.WriteLine("Dictionary {0} initialized", Initialized ? "already" : "not");
             if (!Initialized)
             {
                 if (_verbose) Console.Out.WriteLine("Initializing dictionary...");
@@ -137,13 +136,11 @@ namespace EnglishParser.Core
                             Console.Out.WriteLine("\r\tDropped wordnet structure and data in {0}",
                                 TimeUtils.GetTimeSpent(t1));
                     }
+                }
 
-                    int res = DatabaseManager.ExecSql(conn, "UPDATE db_info SET dict_init = 1 WHERE 1");
-                    DatabaseManager.QuerySql(conn, "SELECT dict_init FROM db_info", reader =>
-                    {
-                        reader.Read();
-                        Console.Out.WriteLine("rows affected={0}; dict_init={1}",res,reader.GetInt16(0));
-                    });
+                using (MySqlConnection conn = DatabaseManager.Connect())
+                {
+                    DatabaseManager.ExecSql(conn, "UPDATE db_info SET dict_init = 1 WHERE dict_init = 0");
                 }
 
                 Initialized = true;
@@ -187,9 +184,7 @@ namespace EnglishParser.Core
             string[,] data = StringUtils.ReadTable(FileUtils.ReadResource("dict/irregular_third_persons.csv"));
             for (int i = 0; i < data.GetLength(0); i++)
                 if (!_irregularThirdPersons.ContainsKey(data[i, 0]))
-                {
                     _irregularThirdPersons.Add(data[i, 0], data[i, 1]);
-                }
 
             DbContext.SaveChanges();
         }

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Reflection;
 
@@ -15,7 +14,7 @@ namespace EnglishParser.Utils
         {
             return ReadResource(Assembly.GetCallingAssembly(), filePath);
         }
-        
+
         public static string ReadResource(Assembly assembly, string filePath)
         {
             string resourceName = GetResourceName(assembly, filePath);
@@ -23,7 +22,9 @@ namespace EnglishParser.Utils
             using (StreamReader reader =
                 new StreamReader(
                     stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
+            {
                 return reader.ReadToEnd();
+            }
         }
     }
 }

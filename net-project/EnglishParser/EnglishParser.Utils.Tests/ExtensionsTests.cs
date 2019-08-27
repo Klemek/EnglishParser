@@ -6,7 +6,7 @@ namespace EnglishParser.Utils.Tests
     public class ExtensionsTests
     {
         #region List
-        
+
         [Test]
         public static void AddIfNotNull()
         {
@@ -16,7 +16,7 @@ namespace EnglishParser.Utils.Tests
             Assert.AreEqual(1, list.Count);
             Assert.AreEqual("hello", list[0]);
         }
-        
+
         #endregion
     }
 }

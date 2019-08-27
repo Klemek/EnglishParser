@@ -35,15 +35,15 @@ namespace EnglishParser.Utils
         #region Vowels and Consonants
 
         private static readonly char[] VOWELS = {'a', 'e', 'i', 'o', 'u', 'y'};
-        
+
         public static bool IsVowel(char c)
         {
-            return VOWELS.Contains(Char.ToLower(c));
+            return VOWELS.Contains(char.ToLower(c));
         }
 
         public static bool IsConsonant(char c)
         {
-            return Char.IsLetter(c) && !IsVowel(c);
+            return char.IsLetter(c) && !IsVowel(c);
         }
 
         #endregion
@@ -92,8 +92,8 @@ namespace EnglishParser.Utils
             if (str == null)
                 return "null";
             str = str.Replace("\n", "\\n")
-                    .Replace("\t", "\\t")
-                    .Replace("\r", "\\r");
+                .Replace("\t", "\\t")
+                .Replace("\r", "\\r");
             return "'" + Ellipsis(str, 15) + "'";
         }
 
@@ -103,12 +103,10 @@ namespace EnglishParser.Utils
             sb.Append(obj.GetType().Name);
             sb.Append("{");
             foreach (FieldInfo field in obj.GetType().GetFields())
-            {
                 if (field.FieldType == typeof(string))
                     sb.AppendFormat("{0}: {1}, ", field.Name, DumpString((string) field.GetValue(obj)));
                 else
                     sb.AppendFormat("{0}: {1}, ", field.Name, field.GetValue(obj));
-            }
 
             if (sb[sb.Length - 1] != '{')
                 sb.Remove(sb.Length - 2, 2);

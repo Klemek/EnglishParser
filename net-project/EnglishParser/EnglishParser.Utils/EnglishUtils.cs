@@ -11,7 +11,7 @@ namespace EnglishParser.Utils
             return StringUtils.IsConsonant(word[lp]) && StringUtils.IsVowel(word[lp - 1]) &&
                    (lp < 2 || StringUtils.IsConsonant(word[lp - 2]));
         }
-        
+
         #region Nouns
 
         public static string GetNounPlural(string noun)
@@ -28,9 +28,9 @@ namespace EnglishParser.Utils
                 return noun.Substring(0, lp) + "ies";
             return noun + "s";
         }
-        
+
         #endregion
-        
+
         #region Adverbs
 
         public static string GetAdverb(string adj)
@@ -46,10 +46,11 @@ namespace EnglishParser.Utils
                 return adj + "ally";
             return adj + "ly";
         }
-        
+
         #endregion
-        
+
         #region Verbs
+
         public static string GetPresentParticiple(string verb)
         {
             int lp = verb.Length - 1;
@@ -90,7 +91,7 @@ namespace EnglishParser.Utils
                 return verb + "es";
             return verb + "s";
         }
-        
+
         #endregion
     }
 }

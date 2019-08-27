@@ -15,7 +15,7 @@ namespace EnglishParser.Utils
             return GetTimeSpan(Now() - t0);
         }
 
-        public static string GetTimeSpan(long ms, bool showMs=true)
+        public static string GetTimeSpan(long ms, bool showMs = true)
         {
             long s = ms / 1000;
             ms %= 1000;
@@ -43,6 +43,7 @@ namespace EnglishParser.Utils
                 if (ms > 0)
                     return $"{ms.ToString()} ms";
             }
+
             return "no time";
         }
 

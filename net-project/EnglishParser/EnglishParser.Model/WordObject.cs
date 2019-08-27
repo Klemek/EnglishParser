@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using EnglishParser.Utils;
 
 namespace EnglishParser.Model
@@ -14,7 +13,7 @@ namespace EnglishParser.Model
         {
             Base = @base ?? throw new ArgumentNullException(nameof(@base));
         }
-        
+
         public string Base { get; set; }
 
         public override string ToString()

@@ -1,16 +1,15 @@
 using System.Linq;
 using EnglishParser.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnglishParser.DB
 {
-    public class DatabaseEntities : DbContext
+    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
     {
         private static readonly int MAX_WORD_LENGTH = 255;
         private readonly string _connectionString;
 
-        public DatabaseEntities(string connectionString)
+        public DbContext(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -21,10 +20,40 @@ namespace EnglishParser.DB
         public virtual DbSet<Verb> Verbs { get; set; }
         public virtual DbSet<Adjective> Adjectives { get; set; }
 
+        #region Queries
+
+        public Noun GetNoun(string word)
+        {
+            return Nouns.FirstOrDefault(n => n.Base == word || n.Plural == word);
+        }
+
+        public bool NounExists(string word)
+        {
+            return Nouns.Any(n => n.Base == word || n.Plural == word);
+        }
+
+        public bool FemaleNounExists(string word)
+        {
+            return Nouns.Any(n => n.Female == word || n.FemalePlural == word);
+        }
+
+        public bool VerbExists(string word)
+        {
+            return Verbs.Any(v => v.Base == word);
+        }
+
+        public bool AdjectiveExists(string word)
+        {
+            return Adjectives.Any(a => a.Base == word);
+        }
+
+        #endregion
+
+        #region Init
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
+            if (!optionsBuilder.IsConfigured)
                 optionsBuilder.UseMySql(_connectionString);
             optionsBuilder.EnableSensitiveDataLogging();
         }
@@ -136,34 +165,7 @@ namespace EnglishParser.DB
                 entity.HasKey(e => new {e.Base, e.Adverb});
             });
         }
-        
-        #region Extensions
 
-        public Noun GetNoun(string word)
-        {
-            return Nouns.FirstOrDefault(n => n.Base == word || n.Plural == word);
-        }
-
-        public bool NounExists(string word)
-        {
-            return Nouns.Any(n => n.Base == word || n.Plural == word);
-        }
-        
-        public bool FemaleNounExists(string word)
-        {
-            return Nouns.Any(n => n.Female == word || n.FemalePlural == word);
-        }
-
-        public bool VerbExists(string word)
-        {
-            return Verbs.Any(v => v.Base == word);
-        }
-        
-        public bool AdjectiveExists(string word)
-        {
-            return Adjectives.Any(a => a.Base == word);
-        }
-        
         #endregion
     }
 }

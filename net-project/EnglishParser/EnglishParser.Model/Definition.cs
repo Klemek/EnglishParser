@@ -18,9 +18,9 @@ namespace EnglishParser.Model
 
         public int SynSetId { get; set; }
         public string Text { get; set; }
-        
+
         public IEnumerable<Word> Synonyms { get; set; }
-        
+
         public override string ToString()
         {
             return StringUtils.ToString(this);
