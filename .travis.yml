@@ -1,7 +1,8 @@
+dist: xenial
 language: csharp
 solution: EnglishParser.sln
 mono: none
-dotnet: 2.2.502
+dotnet: 2.2.401
 services:
   - mysql
 before_install:
