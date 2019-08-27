@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EnglishParser.Utils;
 
 namespace EnglishParser.Model
 {
@@ -19,5 +20,10 @@ namespace EnglishParser.Model
         public string Text { get; set; }
         
         public IEnumerable<Word> Synonyms { get; set; }
+        
+        public override string ToString()
+        {
+            return StringUtils.ToString(this);
+        }
     }
 }

@@ -23,9 +23,7 @@ namespace EnglishParser.Utils
             using (StreamReader reader =
                 new StreamReader(
                     stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
-            {
                 return reader.ReadToEnd();
-            }
         }
     }
 }

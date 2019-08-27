@@ -138,7 +138,12 @@ namespace EnglishParser.Core
                                 TimeUtils.GetTimeSpent(t1));
                     }
 
-                    DatabaseManager.ExecSql(conn, "UPDATE db_info SET dict_init = 1 WHERE 1");
+                    int res = DatabaseManager.ExecSql(conn, "UPDATE db_info SET dict_init = 1 WHERE 1");
+                    DatabaseManager.QuerySql(conn, "SELECT dict_init FROM db_info", reader =>
+                    {
+                        reader.Read();
+                        Console.Out.WriteLine("rows affected={0}; dict_init={1}",res,reader.GetInt16(0));
+                    });
                 }
 
                 Initialized = true;

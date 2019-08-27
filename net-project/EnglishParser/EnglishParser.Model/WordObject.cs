@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using EnglishParser.Utils;
 
 namespace EnglishParser.Model
 {
@@ -14,5 +16,10 @@ namespace EnglishParser.Model
         }
         
         public string Base { get; set; }
+
+        public override string ToString()
+        {
+            return StringUtils.ToString(this);
+        }
     }
 }
