@@ -1,8 +1,6 @@
-/.idea/
-/target/
-/res/
-configuration.properties
-*.iml
-*.jar
-db_workbench.txt
-output.log
+bin/
+obj/
+/packages/
+.idea
+*.ini
+!travis.ini
