@@ -1,17 +1,16 @@
 dist: trusty
-language: java
-jdk:
-  - oraclejdk8
-cache:
-  directories:
-    - $HOME/.m2
+language: csharp
+solution: EnglishParser.sln
 services:
   - mysql
 before_install:
-  - mysql -e 'CREATE DATABASE myapp_test;'
+  - mysql -e 'CREATE DATABASE english_parser_test;'
+install:
+  - nuget restore EnglishParser.sln
+  - nuget install NUnit.Console -Version 3.9.0 -OutputDirectory testrunner
 before_script:
-  - mv src/test/resources/travis.properties src/test/resources/configuration.properties
+  - mv -f travis.ini EnglishParser.DB.Tests/TestDatabase.ini
 script:
-  - mvn test jacoco:report
-after_success:
-  - mvn coveralls:report
+  - msbuild /p:Configuration=Release EnglishParser.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./EnglishParser.Utils.Tests/bin/Release/EnglishParser.Utils.Tests.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.9.0/tools/nunit3-console.exe ./EnglishParser.DB.Tests/bin/Release/EnglishParser.DB.Tests.dll
