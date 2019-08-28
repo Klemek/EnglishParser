@@ -36,7 +36,8 @@ namespace EnglishParser.DB
                 Database = _config.GetString("Database"),
                 UserID = admin ? _config.GetString("SuperUser") : _config.GetString("User"),
                 Password = admin ? _config.GetString("SuperPassword") : _config.GetString("Password"),
-                AllowUserVariables = true
+                AllowUserVariables = true,
+                TreatTinyAsBoolean = true,
             };
             return builder.ConnectionString;
         }
@@ -69,6 +70,7 @@ namespace EnglishParser.DB
                 });
             }
 
+            DictInitialized = false;
             DbContext = new DbContext(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
@@ -94,16 +96,16 @@ namespace EnglishParser.DB
                     {
                         if (!reader.HasRows)
                         {
-                            if (_verbose) Logger.WriteLine("\tNo information on database, assuming empty");
+                            if (_verbose) Logger.WriteLine("\tNo information on database, assuming empty²");
                         }
                         else
                         {
                             reader.Read();
                             currentVersion = reader.GetInt16("version");
                             DateTime lastUpdate = reader.GetDateTime("update_date");
-                            DictInitialized = reader.GetInt16("dict_init") == 1;
+                            DictInitialized = reader.GetBoolean("dict_init");
                             if (_verbose)
-                                Logger.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
+                                Logger.WriteLine("\tDatabase v{0} last updated: {1} (dict {2}initialized)", currentVersion, lastUpdate, DictInitialized?"":"not ");
                         }
                     });
                 }
