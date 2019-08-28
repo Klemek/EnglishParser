@@ -48,17 +48,17 @@ namespace EnglishParser.DB
         public static void Init(IConfig config)
         {
             _verbose = config.GetBoolean("Verbose");
-            if (_verbose) Console.Out.WriteLine("Initializing database...");
+            if (_verbose) Logger.WriteLine("Initializing database...");
             long t0 = TimeUtils.Now();
             _config = config;
             if (_verbose)
-                Console.Error.WriteLine("\tConnecting with DB user \"{0}\"...", _config.GetString("User"));
+                Logger.WriteLine("\tConnecting with DB user \"{0}\"...", _config.GetString("User"));
             using (Connect())
             {
             }
 
             if (_verbose)
-                Console.Error.WriteLine("\tConnecting with DB super user \"{0}\"...",
+                Logger.WriteLine("\tConnecting with DB super user \"{0}\"...",
                     _config.GetString("SuperUser"));
             using (MySqlConnection conn = Connect(true))
             {
@@ -72,7 +72,7 @@ namespace EnglishParser.DB
             DbContext = new DbContext(BuildConnectionString());
             UpgradeDatabase();
             Initialized = true;
-            if (_verbose) Console.Out.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
+            if (_verbose) Logger.WriteLine("Database initialized in {0}", TimeUtils.GetTimeSpent(t0));
         }
 
         public static void UpgradeDatabase()
@@ -86,7 +86,7 @@ namespace EnglishParser.DB
             {
                 if (!TableExists(conn, "db_info"))
                 {
-                    if (_verbose) Console.Out.WriteLine("\tNo information on database, assuming empty");
+                    if (_verbose) Logger.WriteLine("\tNo information on database, assuming empty");
                 }
                 else
                 {
@@ -94,7 +94,7 @@ namespace EnglishParser.DB
                     {
                         if (!reader.HasRows)
                         {
-                            if (_verbose) Console.Out.WriteLine("\tNo information on database, assuming empty");
+                            if (_verbose) Logger.WriteLine("\tNo information on database, assuming empty");
                         }
                         else
                         {
@@ -103,7 +103,7 @@ namespace EnglishParser.DB
                             DateTime lastUpdate = reader.GetDateTime("update_date");
                             DictInitialized = reader.GetInt16("dict_init") == 1;
                             if (_verbose)
-                                Console.Out.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
+                                Logger.WriteLine("\tDatabase v{0} last updated: {1}", currentVersion, lastUpdate);
                         }
                     });
                 }
@@ -111,7 +111,7 @@ namespace EnglishParser.DB
                 while (currentVersion < version)
                     UpgradeDatabaseToVersion(conn, ++currentVersion);
 
-                if (_verbose) Console.Out.WriteLine("\tDatabase up to date in {0}", TimeUtils.GetTimeSpent(t0));
+                if (_verbose) Logger.WriteLine("\tDatabase up to date in {0}", TimeUtils.GetTimeSpent(t0));
             }
         }
 
@@ -120,12 +120,12 @@ namespace EnglishParser.DB
             string filePath;
             if (version == 0)
             {
-                if (_verbose) Console.Out.WriteLine("\tCleaning database...");
+                if (_verbose) Logger.WriteLine("\tCleaning database...");
                 filePath = "sql/clean.sql";
             }
             else
             {
-                if (_verbose) Console.Out.WriteLine("\tUpgrading to v{0}...", version);
+                if (_verbose) Logger.WriteLine("\tUpgrading to v{0}...", version);
                 filePath = $"sql/v{version}.sql";
             }
 
@@ -153,9 +153,9 @@ namespace EnglishParser.DB
             if (_verbose)
             {
                 foreach (string table in startTables.Where(t => !endTables.Contains(t)))
-                    Console.Out.WriteLine("\t\t(-) table {0}", table);
+                    Logger.WriteLine("\t\t(-) table {0}", table);
                 foreach (string table in endTables.Where(t => !startTables.Contains(t)))
-                    Console.Out.WriteLine("\t\t(+) table {0}", table);
+                    Logger.WriteLine("\t\t(+) table {0}", table);
             }
         }
 

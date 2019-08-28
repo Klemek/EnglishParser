@@ -1,4 +1,5 @@
 using System.IO;
+using System.Net.Mime;
 using System.Reflection;
 
 namespace EnglishParser.Utils
@@ -15,13 +16,26 @@ namespace EnglishParser.Utils
             return ReadResource(Assembly.GetCallingAssembly(), filePath);
         }
 
-        public static string ReadResource(Assembly assembly, string filePath)
+        private static Stream GetStream(Assembly assembly, string filePath)
         {
             string resourceName = GetResourceName(assembly, filePath);
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader =
-                new StreamReader(
-                    stream ?? throw new FileNotFoundException("Resource \"" + resourceName + "\" not found")))
+            string pathName = Path.Combine(Directory.GetCurrentDirectory(), "Resources", filePath);
+            Stream stream;
+            try
+            {
+                stream = File.OpenRead(pathName);
+            }
+            catch (FileNotFoundException)
+            {
+                stream = assembly.GetManifestResourceStream(resourceName);
+            }
+            return stream ?? throw new FileNotFoundException($"Resource '{pathName}' or '{resourceName}' not found");
+        }
+
+        public static string ReadResource(Assembly assembly, string filePath)
+        {
+            using (Stream stream = GetStream(assembly, filePath))
+            using (StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
             }

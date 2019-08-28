@@ -33,107 +33,107 @@ namespace EnglishParser.Core
             if (!DatabaseManager.Initialized)
                 throw new Exception("Database is not initialized");
             Initialized = DatabaseManager.DictInitialized;
-            if (_verbose) Console.Out.WriteLine("Dictionary {0} initialized", Initialized ? "already" : "not");
+            if (_verbose) Logger.WriteLine("Dictionary {0} initialized", Initialized ? "already" : "not");
             if (!Initialized)
             {
-                if (_verbose) Console.Out.WriteLine("Initializing dictionary...");
+                if (_verbose) Logger.WriteLine("Initializing dictionary...");
                 long t0 = TimeUtils.Now();
                 long t1;
                 using (MySqlConnection conn = DatabaseManager.Connect(true))
                 {
                     if (_verbose)
-                        Console.Out.Write("\tEmptying dictionary...");
+                        Logger.Write("\tEmptying dictionary...");
                     t1 = TimeUtils.Now();
                     EmptyDictionary(conn);
-                    if (_verbose) Console.Out.WriteLine("\r\tEmptied dictionary in {0}", TimeUtils.GetTimeSpent(t1));
+                    if (_verbose) Logger.WriteLine("\r\tEmptied dictionary in {0}", TimeUtils.GetTimeSpent(t1));
 
                     if (config.GetBoolean("PreComputed"))
                     {
-                        if (_verbose) Console.Out.Write("\tImporting pre-computed data...");
+                        if (_verbose) Logger.Write("\tImporting pre-computed data...");
                         t1 = TimeUtils.Now();
-                        DatabaseManager.ImportSql(conn, "dict/sql/ep_fill.sql");
+                        DatabaseManager.ImportSql(conn, "dict/sql/ep_fill2.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tImported pre-computed data in {0}", TimeUtils.GetTimeSpent(t1));
+                            Logger.WriteLine("\r\tImported pre-computed data in {0}", TimeUtils.GetTimeSpent(t1));
                     }
                     else
                     {
                         if (_verbose)
-                            Console.Out.Write("\tLoading irregular plurals...");
+                            Logger.Write("\tLoading irregular plurals...");
                         t1 = TimeUtils.Now();
                         LoadIrregularPlurals();
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tLoaded {0} irregular plurals in {1}", _irregularPlurals.Count,
+                            Logger.WriteLine("\r\tLoaded {0} irregular plurals in {1}", _irregularPlurals.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tLoading irregular third persons...");
+                            Logger.Write("\tLoading irregular third persons...");
                         t1 = TimeUtils.Now();
                         LoadIrregularThirdPersons();
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tLoaded {0} irregular third persons in {1}",
+                            Logger.WriteLine("\r\tLoaded {0} irregular third persons in {1}",
                                 _irregularThirdPersons.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tLoading irregular verbs...");
+                            Logger.Write("\tLoading irregular verbs...");
                         t1 = TimeUtils.Now();
                         LoadIrregularVerbs();
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tLoaded {0} irregular verbs in {1}", _irregularVerbs.Count,
+                            Logger.WriteLine("\r\tLoaded {0} irregular verbs in {1}", _irregularVerbs.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tLoading irregular adverbs...");
+                            Logger.Write("\tLoading irregular adverbs...");
                         t1 = TimeUtils.Now();
                         LoadIrregularAdverbs();
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tLoaded {0} irregular adverbs in {1}", _irregularAdverbs.Count,
+                            Logger.WriteLine("\r\tLoaded {0} irregular adverbs in {1}", _irregularAdverbs.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tLoading gender nouns...");
+                            Logger.Write("\tLoading gender nouns...");
                         t1 = TimeUtils.Now();
                         LoadGenderNouns();
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tLoaded {0} gender nouns in {1}", _genderNouns.Count,
+                            Logger.WriteLine("\r\tLoaded {0} gender nouns in {1}", _genderNouns.Count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tImporting wordnet structure...");
+                            Logger.Write("\tImporting wordnet structure...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/wordnet_init.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tImported wordnet structure in {0}", TimeUtils.GetTimeSpent(t1));
+                            Logger.WriteLine("\r\tImported wordnet structure in {0}", TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tImporting wordnet data...");
+                            Logger.Write("\tImporting wordnet data...");
                         t1 = TimeUtils.Now();
-                        DatabaseManager.ImportSql(conn, "dict/sql/wordnet_fill.sql");
+                        DatabaseManager.ImportSql(conn, "dict/sql/wordnet_fill2.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tImported wordnet data in {0}", TimeUtils.GetTimeSpent(t1));
+                            Logger.WriteLine("\r\tImported wordnet data in {0}", TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tComputing words...");
+                            Logger.Write("\tComputing words...");
                         t1 = TimeUtils.Now();
                         int count = ComputeWords(conn);
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tComputed {0} words in {1}                 ", count,
+                            Logger.WriteLine("\r\tComputed {0} words in {1}                 ", count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tComputing definitions...");
+                            Logger.Write("\tComputing definitions...");
                         t1 = TimeUtils.Now();
                         count = ComputeDefinitions(conn);
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tComputed {0} definitions in {1}                ", count,
+                            Logger.WriteLine("\r\tComputed {0} definitions in {1}                ", count,
                                 TimeUtils.GetTimeSpent(t1));
 
                         if (_verbose)
-                            Console.Out.Write("\tDropping wordnet structure...");
+                            Logger.Write("\tDropping wordnet structure...");
                         t1 = TimeUtils.Now();
                         DatabaseManager.ImportSql(conn, "dict/sql/wordnet_drop.sql");
                         if (_verbose)
-                            Console.Out.WriteLine("\r\tDropped wordnet structure and data in {0}",
+                            Logger.WriteLine("\r\tDropped wordnet structure and data in {0}",
                                 TimeUtils.GetTimeSpent(t1));
                     }
                 }
@@ -146,12 +146,12 @@ namespace EnglishParser.Core
                 Initialized = true;
                 if (_verbose)
                 {
-                    Console.Out.WriteLine("Dictionary initialized in {0}", TimeUtils.GetTimeSpent(t0));
-                    Console.Out.WriteLine("\t+ {0} Words", DbContext.Words.Count());
-                    Console.Out.WriteLine("\t+ {0} Definitions", DbContext.Definitions.Count());
-                    Console.Out.WriteLine("\t+ {0} Nouns", DbContext.Nouns.Count());
-                    Console.Out.WriteLine("\t+ {0} Verbs", DbContext.Verbs.Count());
-                    Console.Out.WriteLine("\t+ {0} Adjectives", DbContext.Adjectives.Count());
+                    Logger.WriteLine("Dictionary initialized in {0}", TimeUtils.GetTimeSpent(t0));
+                    Logger.WriteLine("\t+ {0} Words", DbContext.Words.Count());
+                    Logger.WriteLine("\t+ {0} Definitions", DbContext.Definitions.Count());
+                    Logger.WriteLine("\t+ {0} Nouns", DbContext.Nouns.Count());
+                    Logger.WriteLine("\t+ {0} Verbs", DbContext.Verbs.Count());
+                    Logger.WriteLine("\t+ {0} Adjectives", DbContext.Adjectives.Count());
                 }
             }
         }
@@ -316,7 +316,7 @@ namespace EnglishParser.Core
         {
             int row = 0;
             int rowCount = DatabaseManager.QuerySqlInt(conn, "SELECT COUNT(*) FROM wn_synset");
-            int rowStep = rowCount / 100; // 1%
+            int rowStep = Math.Max(1, rowCount / 100); // 1%
 
             string word;
             string type;
@@ -389,7 +389,7 @@ namespace EnglishParser.Core
                 DbContext.AddRange(verbBuffer);
                 DbContext.AddRange(adjectiveBuffer);
                 DbContext.SaveChanges();
-                Console.Out.Write("\r\tComputed {0}/{1} words ({2}%) (ETA {3})         ", row, rowCount,
+                Logger.Write("\r\tComputed {0}/{1} words ({2}%) (ETA {3})         ", row, rowCount,
                     Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
             }
 
@@ -458,7 +458,7 @@ namespace EnglishParser.Core
         {
             int row = 0;
             int rowCount = DatabaseManager.QuerySqlInt(conn, "SELECT COUNT(*) FROM wn_gloss");
-            int rowStep = rowCount / 20; // 5%
+            int rowStep = Math.Max(1, rowCount / 20); // 5%
             string gloss;
             int synSetId;
             List<long> ts = new List<long>
@@ -480,7 +480,7 @@ namespace EnglishParser.Core
                     }
                 }, ("@rowstep", rowStep), ("@row", row));
                 DbContext.SaveChanges();
-                Console.Out.Write("\r\tComputed {0}/{1} definitions ({2}%) (ETA {3})         ", row, rowCount,
+                Logger.Write("\r\tComputed {0}/{1} definitions ({2}%) (ETA {3})         ", row, rowCount,
                     Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
             }
 

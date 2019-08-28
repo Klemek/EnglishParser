@@ -4,31 +4,28 @@
         <TargetFramework>netcoreapp2.2</TargetFramework>
 
         <IsPackable>false</IsPackable>
-
-        <RootNamespace>EnglishParser.Utils.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MySqlConnector" Version="0.49.2" />
         <PackageReference Include="nunit" Version="3.11.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+        <PackageReference Include="Trove.Nini" Version="1.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EnglishParser.DB\EnglishParser.DB.csproj" />
-      <ProjectReference Include="..\EnglishParser.Utils\EnglishParser.Utils.csproj" />
+      <ProjectReference Include="..\EnglishParser.Core\EnglishParser.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\Sample.txt" />
-      <EmbeddedResource Include="Resources\Sample.txt" />
-      <None Update="Resources\Sample2.txt">
+      <None Update="Test.ini">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Resources\sql\clean.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="TestLogger.ini">
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Resources\dict\sql\wordnet_fill2.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

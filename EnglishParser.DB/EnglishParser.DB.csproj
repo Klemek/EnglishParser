@@ -19,13 +19,9 @@
 
     <ItemGroup>
       <None Remove="Resources\sql\clean.sql" />
-      <EmbeddedResource Include="Resources\sql\clean.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\sql\clean.sql" />
       <None Remove="Resources\sql\v1.sql" />
-      <EmbeddedResource Include="Resources\sql\v1.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\sql\v1.sql" />
     </ItemGroup>
 
 </Project>
