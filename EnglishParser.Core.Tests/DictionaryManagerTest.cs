@@ -27,6 +27,7 @@ namespace EnglishParser.Core.Tests
             DatabaseManager.ImportSql(typeof(DatabaseManager).Assembly, _conn, "sql/clean.sql");
             DatabaseManager.Init(configSource.Configs["Database"]); //rebuild database
             _config = configSource.Configs["Dictionary"];
+            _config.Set("PreComputed", false);
         }
 
         [OneTimeTearDown]
@@ -116,7 +117,8 @@ namespace EnglishParser.Core.Tests
             Assert.AreEqual(new Noun("entity", "entities"), DbContext.GetNoun("entity"));
             Assert.AreEqual(new Noun("frog", "frogs"), DbContext.GetNoun("frog"));
             Assert.AreEqual(new Noun("toad", "toads"), DbContext.GetNoun("toad"));
-            Assert.AreEqual(new Noun("Frenchman", "Frenchmen", "Frenchwoman", "Frenchwomen"), DbContext.GetNoun("Frenchman"));
+            Assert.AreEqual(new Noun("Frenchman", "Frenchmen", "Frenchwoman", "Frenchwomen"),
+                DbContext.GetNoun("Frenchman"));
             Assert.IsNull(DbContext.GetNoun("Frenchwoman"));
             Assert.AreEqual(new Noun("spadefoot", "spadefeet"), DbContext.GetNoun("spadefoot"));
             Assert.IsNull(DbContext.GetNoun("French_person"));
