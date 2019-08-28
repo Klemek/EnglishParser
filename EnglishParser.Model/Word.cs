@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using EnglishParser.Utils;
 
 namespace EnglishParser.Model
@@ -32,6 +33,8 @@ namespace EnglishParser.Model
         public int Type { get; set; }
 
         public Definition Definition { get; set; }
+
+        public List<Word> Synonyms => Definition.Synonyms;
 
         public override string ToString()
         {

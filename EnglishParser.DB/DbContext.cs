@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using EnglishParser.Model;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,17 @@ namespace EnglishParser.DB
 
         #region Queries
 
+        #region Words
+
+        public List<Word> GetWord(string word)
+        {
+            return Words.Where(w => w.Text == word).OrderBy(w => w.WordNumber).ToList();
+        }
+
+        #endregion
+
+        #region Nouns
+
         public Noun GetNoun(string word)
         {
             return Nouns.FirstOrDefault(n => n.Base == word || n.Plural == word);
@@ -37,15 +49,35 @@ namespace EnglishParser.DB
             return Nouns.Any(n => n.Female == word || n.FemalePlural == word);
         }
 
+        #endregion
+
+        #region Verbs
+
+        public Verb GetVerb(string word)
+        {
+            return Verbs.FirstOrDefault(n => n.Base == word);
+        }
+
         public bool VerbExists(string word)
         {
             return Verbs.Any(v => v.Base == word);
+        }
+
+        #endregion
+
+        #region Adjectives
+
+        public Adjective GetAdjective(string word)
+        {
+            return Adjectives.FirstOrDefault(n => n.Base == word);
         }
 
         public bool AdjectiveExists(string word)
         {
             return Adjectives.Any(a => a.Base == word);
         }
+
+        #endregion
 
         #endregion
 
@@ -79,6 +111,7 @@ namespace EnglishParser.DB
                     .HasColumnName("word_num");
                 entity.HasKey(e => new {e.SynSetId, e.WordNumber});
             });
+            modelBuilder.Entity<Word>().Ignore(e => e.Synonyms);
             modelBuilder.Entity<Definition>(entity =>
             {
                 entity.ToTable("dict_def");

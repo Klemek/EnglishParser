@@ -1,7 +1,7 @@
 CREATE TABLE `db_info` (
                            `version`     SMALLINT  NOT NULL DEFAULT 0,
                            `update_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-                           `dict_init`   BIT(1)    NOT NULL DEFAULT 0
+                           `dict_init`   BOOLEAN   NOT NULL DEFAULT 0
 );
 
 CREATE TABLE `dict_word` (
