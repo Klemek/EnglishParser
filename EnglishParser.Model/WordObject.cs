@@ -20,5 +20,23 @@ namespace EnglishParser.Model
         {
             return StringUtils.ToString(this);
         }
+
+        protected bool Equals(WordObject other)
+        {
+            return Base == other.Base;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((WordObject) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Base != null ? Base.GetHashCode() : 0);
+        }
     }
 }

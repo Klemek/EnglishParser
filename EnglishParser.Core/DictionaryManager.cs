@@ -51,7 +51,7 @@ namespace EnglishParser.Core
                     {
                         if (_verbose) Logger.Write("\tImporting pre-computed data...");
                         t1 = TimeUtils.Now();
-                        DatabaseManager.ImportSql(conn, "dict/sql/ep_fill2.sql");
+                        DatabaseManager.ImportSql(conn, "dict/sql/ep_fill.sql");
                         if (_verbose)
                             Logger.WriteLine("\r\tImported pre-computed data in {0}", TimeUtils.GetTimeSpent(t1));
                     }
@@ -108,7 +108,7 @@ namespace EnglishParser.Core
                         if (_verbose)
                             Logger.Write("\tImporting wordnet data...");
                         t1 = TimeUtils.Now();
-                        DatabaseManager.ImportSql(conn, "dict/sql/wordnet_fill2.sql");
+                        DatabaseManager.ImportSql(conn, "dict/sql/wordnet_fill.sql");
                         if (_verbose)
                             Logger.WriteLine("\r\tImported wordnet data in {0}", TimeUtils.GetTimeSpent(t1));
 
@@ -353,7 +353,7 @@ namespace EnglishParser.Core
                         if (word.Contains("_") || word == null)
                             continue;
 
-                        word = word.Split("\\(")[0];
+                        word = word.Split("(")[0];
                         switch (type)
                         {
                             case "n":
@@ -364,6 +364,7 @@ namespace EnglishParser.Core
                                     nounBuffer.AddIfNotNull(ComputeNewNoun(word));
                                 break;
                             case "v":
+                                wordType = Word.WordType.Verb;
                                 string word2 = word;
                                 if (verbBuffer.All(w => w.Base != word2) && !DbContext.VerbExists(word))
                                     verbBuffer.Add(ComputeNewVerb(word));
@@ -389,8 +390,9 @@ namespace EnglishParser.Core
                 DbContext.AddRange(verbBuffer);
                 DbContext.AddRange(adjectiveBuffer);
                 DbContext.SaveChanges();
-                Logger.Write("\r\tComputed {0}/{1} words ({2}%) (ETA {3})         ", row, rowCount,
-                    Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
+                if (_verbose)
+                    Logger.Write("\r\tComputed {0}/{1} words ({2}%) (ETA {3})         ", row, rowCount,
+                        Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
             }
 
             return row;
@@ -480,8 +482,9 @@ namespace EnglishParser.Core
                     }
                 }, ("@rowstep", rowStep), ("@row", row));
                 DbContext.SaveChanges();
-                Logger.Write("\r\tComputed {0}/{1} definitions ({2}%) (ETA {3})         ", row, rowCount,
-                    Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
+                if (_verbose)
+                    Logger.Write("\r\tComputed {0}/{1} definitions ({2}%) (ETA {3})         ", row, rowCount,
+                        Math.Round(100 * row / (decimal) rowCount), TimeUtils.GetEta(ts, rowStep, rowCount));
             }
 
             return row;

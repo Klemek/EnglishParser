@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Mime;
 using System.Reflection;
@@ -25,7 +26,7 @@ namespace EnglishParser.Utils
             {
                 stream = File.OpenRead(pathName);
             }
-            catch (FileNotFoundException)
+            catch (Exception)
             {
                 stream = assembly.GetManifestResourceStream(resourceName);
             }

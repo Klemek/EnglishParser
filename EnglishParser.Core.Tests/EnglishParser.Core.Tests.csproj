@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="Resources\dict\sql\wordnet_fill2.sql">
+      <None Include="Resources\dict\sql\wordnet_fill.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

@@ -19,9 +19,9 @@ namespace EnglishParser.DB.Tests
 
 
         [OneTimeSetUp]
-        public void Init()
+        public static void Init()
         {
-            IConfigSource configSource = new IniConfigSource("Test.ini");
+            IConfigSource configSource = new IniConfigSource("TestDatabase.ini");
             _config = configSource.Configs["Database"];
             Logger.Init(configSource.Configs["Logger"]);
         }
@@ -35,9 +35,9 @@ namespace EnglishParser.DB.Tests
         [SetUp]
         public void Setup()
         {
+            DatabaseManager.Init(_config);
             if(_conn == null)
                 _conn = DatabaseManager.Connect(true);
-            DatabaseManager.Init(_config);
         }
 
         #region SqlCommand
