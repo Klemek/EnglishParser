@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EnglishParser.Utils;
 using MySql.Data.MySqlClient;
 using Nini.Config;
 using NUnit.Framework;
@@ -20,9 +21,9 @@ namespace EnglishParser.DB.Tests
         [OneTimeSetUp]
         public void Init()
         {
-            _config = new IniConfigSource("TestDatabase.ini").Configs["Database"];
-            DatabaseManager.Init(_config);
-            _conn = DatabaseManager.Connect(true);
+            IConfigSource configSource = new IniConfigSource("Test.ini");
+            _config = configSource.Configs["Database"];
+            Logger.Init(configSource.Configs["Logger"]);
         }
 
         [OneTimeTearDown]
@@ -34,6 +35,8 @@ namespace EnglishParser.DB.Tests
         [SetUp]
         public void Setup()
         {
+            if(_conn == null)
+                _conn = DatabaseManager.Connect(true);
             DatabaseManager.Init(_config);
         }
 
