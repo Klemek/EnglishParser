@@ -28,6 +28,7 @@ namespace EnglishParser.Core.Tests
             DatabaseManager.Init(configSource.Configs["Database"]); //rebuild database
             _config = configSource.Configs["Dictionary"];
             _config.Set("PreComputed", false);
+            DictionaryManager.Init(_config);
         }
 
         [OneTimeTearDown]
@@ -39,11 +40,7 @@ namespace EnglishParser.Core.Tests
         [SetUp]
         public void Setup()
         {
-            if (!DictionaryManager.Initialized)
-            {
-                DictionaryManager.Init(_config);
-                Assert.IsTrue(DictionaryManager.Initialized);
-            }
+            Assert.IsTrue(DictionaryManager.Initialized);
         }
 
         [Test]
