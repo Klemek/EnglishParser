@@ -20,7 +20,7 @@ namespace EnglishParser.Core.Tests
         public static void InitClass()
         {
             Console.Out.WriteLine("hello");
-            IConfigSource configSource = new IniConfigSource("Test.ini");
+            IConfigSource configSource = new IniConfigSource("EnglishParser.Core.Tests.ini");
             Logger.Init(configSource.Configs["Logger"]);
             DatabaseManager.Init(configSource.Configs["Database"]); //prepare connection
             _conn = DatabaseManager.Connect(true);
