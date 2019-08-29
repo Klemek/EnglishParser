@@ -20,7 +20,7 @@ namespace EnglishParser.Core.Tests
         public static void InitClass()
         {
             Console.Out.WriteLine("hello");
-            IConfigSource configSource = new IniConfigSource("Test.ini");
+            IConfigSource configSource = new IniConfigSource("EnglishParser.Core.Tests.ini");
             Logger.Init(configSource.Configs["Logger"]);
             DatabaseManager.Init(configSource.Configs["Database"]); //prepare connection
             _conn = DatabaseManager.Connect(true);
@@ -28,6 +28,7 @@ namespace EnglishParser.Core.Tests
             DatabaseManager.Init(configSource.Configs["Database"]); //rebuild database
             _config = configSource.Configs["Dictionary"];
             _config.Set("PreComputed",true);
+            DictionaryManager.Init(_config);
         }
 
         [OneTimeTearDown]
@@ -39,11 +40,7 @@ namespace EnglishParser.Core.Tests
         [SetUp]
         public void Setup()
         {
-            if (!DictionaryManager.Initialized)
-            {
-                DictionaryManager.Init(_config);
-                Assert.IsTrue(DictionaryManager.Initialized);
-            }
+            Assert.IsTrue(DictionaryManager.Initialized);
         }
 
         [Test]

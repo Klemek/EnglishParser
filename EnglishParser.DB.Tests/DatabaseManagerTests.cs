@@ -21,7 +21,7 @@ namespace EnglishParser.DB.Tests
         [OneTimeSetUp]
         public static void Init()
         {
-            IConfigSource configSource = new IniConfigSource("TestDatabase.ini");
+            IConfigSource configSource = new IniConfigSource("EnglishParser.DB.Tests.ini");
             _config = configSource.Configs["Database"];
             Logger.Init(configSource.Configs["Logger"]);
         }

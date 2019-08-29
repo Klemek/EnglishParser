@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Test.ini">
+      <None Update="EnglishParser.Core.Tests.ini">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Resources\dict\sql\ep_fill.sql">
