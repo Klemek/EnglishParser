@@ -12,6 +12,6 @@ install:
 before_script:
   - mv -f travis.ini EnglishParser.DB.Tests/EnglishParser.DB.Tests.ini
   - mv -f travis.ini EnglishParser.Core.Tests/EnglishParser.Core.Tests.ini
-  - mv -f travis.ini EnglishParser.Logger.Tests/EnglishParser.Logger.Tests.ini
+  - mv -f travis.ini EnglishParser.Utils.Tests/EnglishParser.Utils.Tests.ini
 script:
   - dotnet test
