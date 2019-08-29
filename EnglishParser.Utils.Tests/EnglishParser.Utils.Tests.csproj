@@ -28,7 +28,7 @@
       <None Update="Resources\sql\clean.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="TestLogger.ini">
+      <None Update="EnglishParser.Utils.Tests.ini">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

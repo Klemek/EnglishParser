@@ -12,7 +12,7 @@ namespace EnglishParser.Utils.Tests
         [OneTimeSetUp]
         public void Init()
         {
-            IConfigSource configSource = new IniConfigSource("TestLogger.ini");
+            IConfigSource configSource = new IniConfigSource("EnglishParser.Utils.Tests.ini");
             _config = configSource.Configs["Logger"];
         }
         
@@ -23,7 +23,7 @@ namespace EnglishParser.Utils.Tests
             Logger.WriteLine("Hello");
             FieldInfo field = typeof(Logger).GetField("_stream", BindingFlags.NonPublic | BindingFlags.Static);
             ((Stream)field.GetValue(null)).Close();
-            using(Stream stream = File.OpenRead("EnglishParser.Utils.Tests.log"))
+            using(Stream stream = File.OpenRead("EnglishParser.Tests.log"))
             using (StreamReader reader = new StreamReader(stream))
             {
                 string data = reader.ReadToEnd();
