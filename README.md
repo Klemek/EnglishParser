@@ -7,6 +7,10 @@ WIP
 ```ini
 ; EnglishParser.ini
 
+[Logger]
+LogFile = EnglishParser.log
+Append = true
+
 [Database]
 Version = 1
 Host = localhost
