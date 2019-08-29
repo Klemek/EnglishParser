@@ -10,6 +10,8 @@ before_install:
 install:
   - dotnet restore
 before_script:
-  - mv -f travis.ini EnglishParser.DB.Tests/TestDatabase.ini
+  - mv -f travis.ini EnglishParser.DB.Tests/EnglishParser.DB.Tests.ini
+  - mv -f travis.ini EnglishParser.Core.Tests/EnglishParser.Core.Tests.ini
+  - mv -f travis.ini EnglishParser.Logger.Tests/EnglishParser.Logger.Tests.ini
 script:
   - dotnet test
