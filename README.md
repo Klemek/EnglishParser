@@ -1,4 +1,5 @@
 [![Build Status](https://img.shields.io/travis/Klemek/EnglishParser.svg?style=popout)](https://travis-ci.org/Klemek/EnglishParser)
+[![Scc Count Badge](https://sloc.xyz/github/klemek/englishparser/?category=code)](https://github.com/boyter/scc/#badges-beta)
 [![Language grade: C#](https://img.shields.io/lgtm/grade/csharp/g/Klemek/EnglishParser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Klemek/EnglishParser/context:csharp)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/Klemek/EnglishParser.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Klemek/EnglishParser/alerts/)
 
